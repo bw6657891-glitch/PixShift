@@ -4,22 +4,22 @@ const BASE_URL = 'https://dashscope.aliyuncs.com/api/v1';
 
 const STYLE_CONFIGS = {
     '美漫风': {
-        model: 'qwen-image-edit-max',
+        model: 'qwen-image-edit-2.0',
         positive_prompt: '将图片转换为美国漫画风格，强调高对比度、粗轮廓线、明亮色彩和强烈阴影。保持原图主体、构图和内容完全不变，只改变艺术表现方式。',
         negative_prompt: '低质量，模糊，变形，不自然，写实照片感，黑白照片，水彩'
     },
     '人像优化': {
-        model: 'qwen-image-edit-max',
+        model: 'qwen-image-2.0',
         positive_prompt: '对人物肖像进行专业美化处理，提升皮肤质感、眼神光、自然光影过渡，使人物更加立体生动。保持人物面部特征和整体构图不变。',
         negative_prompt: '过度磨皮，塑料感，失真，背景虚化过度，锐化过度'
     },
     '城市景观': {
-        model: 'qwen-image-edit-max',
+        model: 'qwen-image-edit-2.0',
         positive_prompt: '将城市照片增强为具有视觉冲击力的艺术化城市景观，强化建筑线条、光影对比，提升色彩饱和度和天空细节。保持原图结构不变。',
         negative_prompt: '低质量，模糊，变形，不自然，人物干扰，杂乱'
     },
     '电影感': {
-        model: 'qwen-image-edit-max',
+        model: 'qwen-image-edit-2.0',
         positive_prompt: '为图片添加电影级质感，包括柔光滤镜、电影级色调、浅景深效果和宽银幕比例暗示。保持内容不变。',
         negative_prompt: '低质量，模糊，变形，不自然，普通拍照感，过曝，欠曝'
     }
