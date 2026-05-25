@@ -1,13 +1,7 @@
-const axios = require('axios');
-
-// 阿里云API配置 —— 密钥仅从环境变量读取
+// 使用 Node.js 内置 fetch，无需安装任何依赖
 const API_KEY = process.env.DASHSCOPE_API_KEY;
-if (!API_KEY) {
-    throw new Error('未配置环境变量 DASHSCOPE_API_KEY，无法启动服务');
-}
 const BASE_URL = 'https://dashscope.aliyuncs.com/api/v1';
 
-// 新的P图风格配置
 const STYLE_CONFIGS = {
     '美漫风': {
         model: 'qwen-image-edit-max',
@@ -32,14 +26,22 @@ const STYLE_CONFIGS = {
 };
 
 module.exports = async (req, res) => {
+    // 设置 CORS 头和内容类型
     res.setHeader('Content-Type', 'application/json');
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
     if (req.method === 'OPTIONS') {
-        res.status(200).end();
-        return;
+        return res.status(200).end();
+    }
+
+    // 检查 API 密钥（在请求处理时检查，而不是启动时）
+    if (!API_KEY) {
+        return res.status(500).json({
+            success: false,
+            error: 'API 密钥未配置，请联系管理员设置环境变量 DASHSCOPE_API_KEY'
+        });
     }
 
     if (req.method === 'GET') {
@@ -77,6 +79,7 @@ module.exports = async (req, res) => {
 
             const styleConfig = STYLE_CONFIGS[style_name];
 
+            // 确保 base64 格式正确
             let imageData = image_base64;
             if (!image_base64.startsWith('data:image/')) {
                 imageData = `data:image/jpeg;base64,${image_base64}`;
@@ -104,19 +107,24 @@ module.exports = async (req, res) => {
                 }
             };
 
-            const response = await axios.post(
-                `${BASE_URL}/services/aigc/multimodal-generation/generation`,
-                requestBody,
-                {
-                    headers: {
-                        'Authorization': `Bearer ${API_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
-                    timeout: 60000
-                }
-            );
+            // 使用内置 fetch 调用阿里云 API
+            const response = await fetch(`${BASE_URL}/services/aigc/multimodal-generation/generation`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${API_KEY}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody),
+                signal: AbortSignal.timeout(60000) // 60秒超时
+            });
 
-            const content = response.data?.output?.choices?.[0]?.message?.content;
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || `阿里云API返回错误: ${response.status}`);
+            }
+
+            const content = data?.output?.choices?.[0]?.message?.content;
             let imageUrl = null;
 
             if (Array.isArray(content)) {
@@ -136,27 +144,17 @@ module.exports = async (req, res) => {
                 success: true,
                 imageUrl: imageUrl,
                 style: style_name,
-                request_id: response.data.request_id
+                request_id: data.request_id
             });
 
         } catch (error) {
             console.error('API调用错误:', error.message);
-            let errorMsg = '图像处理失败';
-            let statusCode = 500;
-            if (error.response?.data) {
-                errorMsg = error.response.data.message || errorMsg;
-                if (error.response.data.code === 'InvalidApiKey') {
-                    errorMsg = 'API密钥无效';
-                    statusCode = 401;
-                }
-            }
-            return res.status(statusCode).json({
+            return res.status(500).json({
                 success: false,
-                error: errorMsg,
-                details: error.response?.data || error.message
+                error: error.message || '图像处理失败'
             });
         }
     }
 
-    res.status(405).json({ success: false, error: 'Method not allowed' });
+    return res.status(405).json({ success: false, error: 'Method not allowed' });
 };
