@@ -1,0 +1,11 @@
+{
+  "name": "api-server",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node api/health.js"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=18"
+  }
+}
