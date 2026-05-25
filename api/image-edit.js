@@ -9,7 +9,7 @@ const STYLE_CONFIGS = {
         negative_prompt: '低质量，模糊，变形，不自然，写实照片感，黑白照片，水彩'
     },
     '人像优化': {
-        model: 'qwen-image-max',
+        model: 'qwen-image-edit-max',
         positive_prompt: '对人物肖像进行专业美化处理，提升皮肤质感、眼神光、自然光影过渡，使人物更加立体生动。保持人物面部特征和整体构图不变。',
         negative_prompt: '过度磨皮，塑料感，失真，背景虚化过度，锐化过度'
     },
