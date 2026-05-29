@@ -1,27 +1,49 @@
-// 使用 Node.js 内置 fetch，无需安装任何依赖
+// dunhuang-render.js （替换原 image-edit.js 或新增）
+// 使用 Node.js 内置 fetch，无需安装依赖
 const API_KEY = process.env.DASHSCOPE_API_KEY;
 const BASE_URL = 'https://dashscope.aliyuncs.com/api/v1';
 
+// 敦煌八大风格配置
 const STYLE_CONFIGS = {
-    '美漫风': {
+    '反弹琵琶': {
         model: 'qwen-image-edit-max',
-        positive_prompt: '将图片转换为美国漫画风格，强调高对比度、粗轮廓线、明亮色彩和强烈阴影。保持原图主体、构图和内容完全不变，只改变艺术表现方式。',
-        negative_prompt: '低质量，模糊，变形，不自然，写实照片感，黑白照片，水彩'
+        positive_prompt: '将人物照片转换为敦煌壁画中飞天反弹琵琶的风格。人物保持原貌，四周环绕飞天、飘带飞舞，背景融入敦煌壁画元素，色彩以土红、石绿、金色为主，具有千年壁画质感。',
+        negative_prompt: '低质量，模糊，变形，现代服饰，写实照片，背景杂乱，卡通'
     },
-    '人像优化': {
+    '供养人像': {
         model: 'qwen-image-edit-max',
-        positive_prompt: '对人物肖像进行专业美化处理，提升皮肤质感、眼神光、自然光影过渡，使人物更加立体生动。保持人物面部特征和整体构图不变。',
-        negative_prompt: '过度磨皮，塑料感，失真，背景虚化过度，锐化过度'
+        positive_prompt: '将人物转化为晚唐敦煌供养人像风格。身着华丽唐代服饰，手持鲜花，身后呈现原色敦煌壁画，线条细腻，色彩饱满，带有宗教庄严感。',
+        negative_prompt: '低质量，现代服装，表情夸张，背景单调，二次元'
     },
-    '城市景观': {
+    '千佛光相': {
         model: 'qwen-image-edit-max',
-        positive_prompt: '将城市照片增强为具有视觉冲击力的艺术化城市景观，强化建筑线条、光影对比，提升色彩饱和度和天空细节。保持原图结构不变。',
-        negative_prompt: '低质量，模糊，变形，不自然，人物干扰，杂乱'
+        positive_prompt: '面部居中，四周千佛呈放射状光相排列，融合敦煌千佛洞元素，光线柔和而神圣，人物面部保持清晰，整体如佛光普照。',
+        negative_prompt: '模糊，变形，光线暗淡，不对称，佛像扭曲'
     },
-    '电影感': {
+    '九色鹿缘': {
         model: 'qwen-image-edit-max',
-        positive_prompt: '为图片添加电影级质感，包括柔光滤镜、电影级色调、浅景深效果和宽银幕比例暗示。保持内容不变。',
-        negative_prompt: '低质量，模糊，变形，不自然，普通拍照感，过曝，欠曝'
+        positive_prompt: '将人物融入九色鹿本生故事场景，背景为赭红山峦，人物化为故事中角色，保留敦煌壁画特有的装饰性风格，色彩鲜艳。',
+        negative_prompt: '低质量，现代元素，动物变形，背景脱离壁画风格'
+    },
+    '藻井天顶': {
+        model: 'qwen-image-edit-max',
+        positive_prompt: '头像化为敦煌藻井图案中心，四周铺开联珠纹、莲花纹、卷草纹，对称华丽，色彩以深红、金、绿为主，极具装饰性。',
+        negative_prompt: '不对称，纹样粗糙，人物特征丢失，现代感'
+    },
+    '丝路驼影': {
+        model: 'qwen-image-edit-max',
+        positive_prompt: '人物化为西域商贾形象，头戴胡帽，牵骆驼，背景为沙漠落日与丝路古城，带有敦煌壁画中商旅图的色感与氛围。',
+        negative_prompt: '现代交通工具，表情冷漠，背景城市'
+    },
+    '金刚怒目': {
+        model: 'qwen-image-edit-max',
+        positive_prompt: '人物面部转化为护法金刚风格，棱角分明，身绕火焰纹，表情威严，保留敦煌金刚力士的造型特征，色彩强烈。',
+        negative_prompt: '柔和表情，女性化，火焰模糊，失去人物辨识度'
+    },
+    '斑驳千年': {
+        model: 'qwen-image-edit-max',
+        positive_prompt: '人物半隐于斑驳剥落的壁画墙面中，叠加岁月肌理、裂纹和褪色效果，仿佛已存在千年，保持人物轮廓可辨。',
+        negative_prompt: '高清干净，新壁画感，无纹理，过于清晰'
     }
 };
 
@@ -36,7 +58,6 @@ module.exports = async (req, res) => {
         return res.status(200).end();
     }
 
-    // 检查 API 密钥（在请求处理时检查，而不是启动时）
     if (!API_KEY) {
         return res.status(500).json({
             success: false,
@@ -47,12 +68,12 @@ module.exports = async (req, res) => {
     if (req.method === 'GET') {
         return res.status(200).json({
             success: true,
-            endpoint: 'AI图像编辑API',
+            endpoint: '敦煌幻境 AI 飞天照相馆 API',
             method: 'POST',
-            description: '上传图片并选择风格进行AI渲染',
+            description: '上传人像图片并选择敦煌风格进行AI融合',
             availableStyles: Object.keys(STYLE_CONFIGS),
             parameters: {
-                style_name: 'string (required) - 风格名称',
+                style_name: 'string (required) - 风格名称（见availableStyles）',
                 image_base64: 'string (required) - base64编码的图片数据'
             }
         });
@@ -107,7 +128,7 @@ module.exports = async (req, res) => {
                 }
             };
 
-            // 使用内置 fetch 调用阿里云 API
+            // 调用阿里云 API
             const response = await fetch(`${BASE_URL}/services/aigc/multimodal-generation/generation`, {
                 method: 'POST',
                 headers: {
@@ -115,7 +136,7 @@ module.exports = async (req, res) => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(requestBody),
-                signal: AbortSignal.timeout(60000) // 60秒超时
+                signal: AbortSignal.timeout(60000)
             });
 
             const data = await response.json();
