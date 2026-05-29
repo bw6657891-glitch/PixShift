@@ -3,96 +3,281 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PixShift - AI 摄影风格渲染</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>敦煌幻境 · Dunhuang Lens — AI 飞天照相馆</title>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
-        .style-card.active { border-color: #111827; background-color: #f9fafb; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .hero-gradient { background: radial-gradient(circle at 20% 30%, #f3f4f6 0%, #ffffff 70%); }
-        .deco-circle { position: absolute; border-radius: 50%; background: rgba(17,24,39,0.03); z-index: 0; }
-        .deco-line { position: absolute; height: 1px; background: linear-gradient(to right, transparent, #d1d5db, transparent); }
-        .upload-area { transition: all 0.3s; }
-        .upload-area:hover { border-color: #9ca3af; background: #f9fafb; }
-        .result-frame { box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
-        .gallery-card:hover .gallery-overlay { opacity: 1; }
+        :root {
+            --dunhuang-bg: #fdf6ed;
+            --dunhuang-red: #b34d4a;
+            --dunhuang-green: #4a7c59;
+            --dunhuang-gold: #c9a84c;
+            --dunhuang-dark: #2c2c2c;
+            --dunhuang-red-light: #fdf3f0;
+            --dunhuang-gold-light: #fdf9ed;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Serif SC', 'Source Han Serif CN', system-ui, -apple-system, sans-serif;
+            background-color: #fefdf9;
+            color: #2c2c2c;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* 敦煌风格卡片选中态 */
+        .style-card {
+            transition: all 0.3s ease;
+            border-color: #e5d5c8;
+            background-color: #fffefb;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .style-card:hover {
+            border-color: #c9a84c;
+            background-color: #fdf9ed;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(179, 77, 74, 0.08);
+        }
+        .style-card.active {
+            border-color: #b34d4a !important;
+            background-color: #fdf3f0 !important;
+            box-shadow: 0 4px 16px rgba(179, 77, 74, 0.12);
+            transform: translateY(-1px);
+        }
+        .style-card.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(to right, #b34d4a, #c9a84c);
+            border-radius: 0 0 2px 2px;
+        }
+
+        /* Hero 渐变背景 */
+        .hero-gradient {
+            background: radial-gradient(ellipse at 30% 25%, rgba(201, 168, 76, 0.08) 0%, rgba(253, 246, 237, 0.6) 40%, #fefdf9 70%),
+                radial-gradient(ellipse at 70% 60%, rgba(179, 77, 74, 0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(74, 124, 89, 0.03) 0%, transparent 45%);
+        }
+
+        /* 装饰性元素 */
+        .deco-circle-dunhuang {
+            position: absolute;
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .deco-line-dunhuang {
+            position: absolute;
+            height: 1px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* 上传区域 */
+        .upload-area {
+            transition: all 0.3s ease;
+            border-color: #e5d5c8;
+            background-color: #fffefb;
+        }
+        .upload-area:hover {
+            border-color: #c9a84c;
+            background: #fdf9ed;
+            box-shadow: 0 4px 20px rgba(179, 77, 74, 0.06);
+        }
+
+        /* 结果框 */
+        .result-frame {
+            box-shadow: 0 25px 50px -12px rgba(44, 28, 20, 0.2);
+            border-color: #e5d5c8;
+            background: #fffefb;
+            border-radius: 1.5rem;
+        }
+
+        /* 作品展示卡片 */
+        .gallery-card:hover .gallery-overlay {
+            opacity: 1;
+        }
+        .gallery-card {
+            border-color: #e5d5c8;
+            transition: all 0.4s ease;
+        }
+        .gallery-card:hover {
+            box-shadow: 0 16px 40px rgba(179, 77, 74, 0.12);
+            transform: translateY(-4px);
+        }
+
+        /* 飘带动画 (仅用于背景装饰) */
+        @keyframes ribbonFloat {
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.35;
+            }
+            25% {
+                transform: translateY(-18px) rotate(3deg);
+                opacity: 0.55;
+            }
+            50% {
+                transform: translateY(-8px) rotate(-2deg);
+                opacity: 0.4;
+            }
+            75% {
+                transform: translateY(-22px) rotate(1deg);
+                opacity: 0.5;
+            }
+        }
+        @keyframes ribbonFloat2 {
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.3;
+            }
+            30% {
+                transform: translateY(-14px) rotate(-3deg);
+                opacity: 0.5;
+            }
+            60% {
+                transform: translateY(-6px) rotate(2deg);
+                opacity: 0.38;
+            }
+            85% {
+                transform: translateY(-20px) rotate(-1deg);
+                opacity: 0.48;
+            }
+        }
+        .ribbon-animate {
+            animation: ribbonFloat 8s ease-in-out infinite;
+        }
+        .ribbon-animate2 {
+            animation: ribbonFloat2 10s ease-in-out infinite;
+        }
+
+        /* 藻井纹样背景 */
+        .ceiling-pattern {
+            background-image:
+                radial-gradient(circle at 50% 50%, rgba(201, 168, 76, 0.04) 0%, transparent 60%),
+                radial-gradient(circle at 50% 50%, rgba(179, 77, 74, 0.03) 0%, transparent 35%),
+                radial-gradient(circle at 50% 50%, rgba(74, 124, 89, 0.02) 0%, transparent 25%);
+            background-size: 200px 200px, 140px 140px, 90px 90px;
+            background-position: 0 0, 30px 30px, 55px 55px;
+            background-repeat: repeat;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .hero-gradient {
+                background: radial-gradient(ellipse at 40% 20%, rgba(201, 168, 76, 0.06) 0%, #fefdf9 60%);
+            }
+            .result-frame {
+                box-shadow: 0 15px 30px -8px rgba(44, 28, 20, 0.15);
+            }
+        }
     </style>
 </head>
-<body class="bg-white text-gray-900 antialiased relative">
+<body class="antialiased relative min-h-screen">
 
-    <!-- 装饰性背景元素（仅视觉） -->
+    <!-- 装饰性背景元素 -->
     <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div class="deco-circle w-96 h-96 top-10 -left-32 opacity-20"></div>
-        <div class="deco-circle w-64 h-64 bottom-20 right-10 opacity-10"></div>
-        <div class="deco-line w-full top-[30%] left-0 opacity-50"></div>
+        <div class="ceiling-pattern absolute inset-0 opacity-40"></div>
+        <div class="deco-circle-dunhuang w-80 h-80 top-16 -left-24 opacity-15" style="background:rgba(201,168,76,0.08);"></div>
+        <div class="deco-circle-dunhuang w-56 h-56 bottom-32 right-16 opacity-12" style="background:rgba(179,77,74,0.06);"></div>
+        <div class="deco-circle-dunhuang w-40 h-40 top-[45%] right-[8%] opacity-10" style="background:rgba(74,124,89,0.05);"></div>
+        <div class="deco-line-dunhuang w-full top-[28%] left-0 opacity-30" style="background:linear-gradient(to right, transparent, #d5c8b8, transparent);"></div>
+        <div class="deco-line-dunhuang w-3/4 top-[65%] left-[12%] opacity-20" style="background:linear-gradient(to right, transparent, #c9a84c55, transparent);"></div>
     </div>
 
     <!-- 导航栏 -->
-    <nav class="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-50">
+    <nav class="sticky top-0 bg-white/75 backdrop-blur-lg border-b z-50" style="border-color:#f0e8dd;">
         <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-            <a href="#" class="text-xl font-bold tracking-tight">PixShift <span class="text-gray-400 font-normal text-sm">| AI 智能渲染</span></a>
+            <a href="#" class="text-xl font-bold tracking-tight" style="color:#2c2c2c;">
+                敦煌幻境 <span class="font-normal text-sm hidden sm:inline" style="color:#9b8c7c;">| Dunhuang Lens</span>
+            </a>
             <div class="space-x-6 text-sm font-medium">
-                <a href="#tool" class="text-gray-600 hover:text-black transition">AI 修图</a>
-                <a href="#gallery" class="text-gray-600 hover:text-black transition">作品展示</a>
+                <a href="#tool" class="transition hover:underline underline-offset-4" style="color:#7a6a5c;">AI 渲染</a>
+                <a href="#gallery" class="transition hover:underline underline-offset-4" style="color:#7a6a5c;">作品展示</a>
             </div>
         </div>
     </nav>
 
     <!-- Hero -->
-    <section class="relative hero-gradient">
+    <section class="relative hero-gradient overflow-hidden">
+        <!-- 飞天飘带装饰 (仅视觉) -->
+        <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+            <svg class="absolute top-[10%] right-[5%] w-64 h-80 ribbon-animate opacity-25 hidden lg:block" viewBox="0 0 200 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M160 20 C140 50, 170 90, 130 120 C90 150, 60 110, 40 140 C20 170, 50 200, 30 230" stroke="#b34d4a" stroke-width="2.5" fill="none" opacity="0.5" stroke-linecap="round"/>
+                <path d="M170 15 C150 48, 178 85, 140 115 C100 148, 68 108, 48 135 C28 162, 55 195, 35 228" stroke="#c9a84c" stroke-width="1.8" fill="none" opacity="0.4" stroke-linecap="round"/>
+                <path d="M150 30 C135 55, 160 88, 125 118" stroke="#4a7c59" stroke-width="1.5" fill="none" opacity="0.35" stroke-linecap="round"/>
+            </svg>
+            <svg class="absolute bottom-[8%] left-[3%] w-52 h-64 ribbon-animate2 opacity-20 hidden lg:block" viewBox="0 0 160 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 180 C35 150, 15 115, 50 85 C85 55, 100 95, 125 65 C145 40, 120 15, 140 5" stroke="#c9a84c" stroke-width="2" fill="none" opacity="0.45" stroke-linecap="round"/>
+                <path d="M15 185 C28 152, 10 118, 45 88" stroke="#b34d4a" stroke-width="1.6" fill="none" opacity="0.35" stroke-linecap="round"/>
+            </svg>
+        </div>
+
         <div class="max-w-5xl mx-auto px-6 py-28 text-center relative z-10">
-            <span class="inline-block px-4 py-1 mb-6 text-xs font-semibold tracking-widest uppercase bg-gray-100 rounded-full text-gray-500">AI Powered Photo Rendering</span>
-            <h1 class="text-5xl md:text-7xl font-bold tracking-tight leading-tight text-gray-900">你的照片<br>值得电影级质感</h1>
-            <p class="mt-6 text-lg text-gray-500 max-w-2xl mx-auto">AI大模型毫秒级解析，保留原图结构，赋予艺术灵魂</p>
-            <div class="mt-12 flex justify-center gap-4">
-                <a href="#tool" class="inline-flex items-center gap-2 px-8 py-3 bg-black text-white rounded-full text-sm font-semibold hover:bg-gray-800 transition shadow-lg shadow-gray-200">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i> 开始创作
+            <span class="inline-block px-5 py-1.5 mb-6 text-xs font-semibold tracking-widest uppercase rounded-full" style="background-color:#fdf3f0;color:#b34d4a;border:1px solid #f0d8d4;">
+                AI Powered · Dunhuang Mural Fusion
+            </span>
+            <h1 class="text-5xl md:text-7xl font-bold tracking-tight leading-tight" style="color:#2c2c2c;">
+                你的照片<br>穿越千年敦煌
+            </h1>
+            <p class="mt-6 text-lg max-w-2xl mx-auto" style="color:#8b7a6a;">
+                AI 毫秒级融合，化身壁画中人 · 飞天环绕，丝路千年
+            </p>
+            <div class="mt-12 flex justify-center gap-4 flex-wrap">
+                <a href="#tool" class="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-sm font-semibold text-white transition shadow-lg hover:shadow-xl" style="background-color:#b34d4a;box-shadow:0 8px 24px rgba(179,77,74,0.25);">
+                    开始创作
                 </a>
-                <a href="#gallery" class="inline-flex items-center gap-2 px-8 py-3 border border-gray-200 rounded-full text-sm font-semibold text-gray-600 hover:bg-gray-50 transition">
-                    <i class="fa-regular fa-image"></i> 查看作品
+                <a href="#gallery" class="inline-flex items-center gap-2 px-8 py-3.5 border rounded-full text-sm font-semibold transition hover:shadow-md" style="border-color:#d5c8b8;color:#7a6a5c;background:#fffefb;">
+                    查看作品
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- 三步引导 (新增) -->
+    <!-- 三步引导 -->
     <section class="max-w-4xl mx-auto px-6 py-20 relative z-10">
-        <h2 class="text-2xl font-bold text-center mb-12">三步，给你的照片换一种风格</h2>
+        <h2 class="text-2xl font-bold text-center mb-12" style="color:#2c2c2c;">三步，穿越敦煌壁画</h2>
         <div class="grid md:grid-cols-3 gap-8">
-            <div class="text-center p-6">
-                <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-600"><i class="fa-solid fa-upload text-xl"></i></div>
-                <h3 class="font-semibold mb-2">1. 上传原图</h3>
-                <p class="text-sm text-gray-500">拖拽或点击上传，支持JPG/PNG，最大10MB</p>
+            <div class="text-center p-6 rounded-2xl transition hover:shadow-md" style="background:#fffefb;border:1px solid #f0e8dd;">
+                <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold" style="background-color:#fdf3f0;color:#b34d4a;">1</div>
+                <h3 class="font-semibold mb-2" style="color:#2c2c2c;">上传原图</h3>
+                <p class="text-sm" style="color:#9b8c7c;">拖拽或点击上传，支持JPG/PNG，最大10MB</p>
             </div>
-            <div class="text-center p-6">
-                <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-600"><i class="fa-solid fa-palette text-xl"></i></div>
-                <h3 class="font-semibold mb-2">2. 选择风格</h3>
-                <p class="text-sm text-gray-500">美漫、人像优化、城市景观、电影质感，任你挑选</p>
+            <div class="text-center p-6 rounded-2xl transition hover:shadow-md" style="background:#fffefb;border:1px solid #f0e8dd;">
+                <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold" style="background-color:#fdf9ed;color:#c9a84c;">2</div>
+                <h3 class="font-semibold mb-2" style="color:#2c2c2c;">选择敦煌风格</h3>
+                <p class="text-sm" style="color:#9b8c7c;">八大飞天主题，反弹琵琶、九色鹿缘任你挑选</p>
             </div>
-            <div class="text-center p-6">
-                <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-600"><i class="fa-solid fa-download text-xl"></i></div>
-                <h3 class="font-semibold mb-2">3. 下载大片</h3>
-                <p class="text-sm text-gray-500">AI渲染完成，一键保存高清图片</p>
+            <div class="text-center p-6 rounded-2xl transition hover:shadow-md" style="background:#fffefb;border:1px solid #f0e8dd;">
+                <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold" style="background-color:#f0f5f2;color:#4a7c59;">3</div>
+                <h3 class="font-semibold mb-2" style="color:#2c2c2c;">下载专属大片</h3>
+                <p class="text-sm" style="color:#9b8c7c;">AI渲染完成，一键保存高清专属照片</p>
             </div>
         </div>
     </section>
 
-    <!-- AI P图工具 -->
-    <section id="tool" class="max-w-6xl mx-auto px-6 py-16 border-t border-gray-100 relative z-10">
-        <h2 class="text-3xl font-bold mb-4 text-center">智能风格转换</h2>
-        <p class="text-center text-gray-500 mb-12">实时预览，所见即所得</p>
+    <!-- AI P图工具区 -->
+    <section id="tool" class="max-w-6xl mx-auto px-6 py-16 relative z-10" style="border-top:1px solid #f0e8dd;">
+        <h2 class="text-3xl font-bold mb-2 text-center" style="color:#2c2c2c;">敦煌风格转换</h2>
+        <p class="text-center mb-12" style="color:#9b8c7c;">上传人像，选择风格，一键生成壁画大片</p>
         <div class="grid lg:grid-cols-2 gap-10 items-start">
             <!-- 左侧操作区 -->
-            <div class="space-y-8">
+            <div class="space-y-7">
                 <!-- 上传 -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-500 mb-3">上传图片</label>
-                    <div id="dropzone" class="upload-area relative border-2 border-dashed border-gray-200 rounded-2xl p-10 text-center cursor-pointer bg-white">
-                        <input type="file" id="upload-input" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
+                    <label class="block text-sm font-medium mb-3" style="color:#8b7a6a;">上传人像照片</label>
+                    <div id="dropzone" class="upload-area relative border-2 border-dashed rounded-2xl p-10 text-center cursor-pointer" style="background:#fffefb;">
+                        <input type="file" id="upload-input" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer z-10">
                         <div id="upload-placeholder">
-                            <i class="fa-solid fa-cloud-arrow-up text-3xl text-gray-300 mb-3"></i>
-                            <p class="text-gray-400 text-sm font-medium">点击或拖拽上传照片</p>
-                            <p class="text-gray-300 text-xs mt-1">JPG / PNG / WEBP，最大10MB</p>
+                            <p class="text-sm font-medium" style="color:#b0a090;">点击或拖拽上传照片</p>
+                            <p class="text-xs mt-1" style="color:#ccc0b0;">JPG / PNG / WEBP，最大10MB</p>
                         </div>
                         <div id="upload-preview" class="hidden">
                             <img id="preview-img" src="" alt="预览" class="max-h-48 mx-auto rounded-lg shadow-md">
@@ -102,267 +287,325 @@
 
                 <!-- 风格选择 -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-500 mb-3">选择风格</label>
-                    <div class="grid grid-cols-2 gap-3">
-                        <button class="style-card flex items-center gap-2 p-4 border rounded-xl text-sm font-medium hover:border-gray-400 transition bg-white" data-style="美漫风">
-                            <span class="text-lg">🎨</span> 美漫风格
+                    <label class="block text-sm font-medium mb-3" style="color:#8b7a6a;">选择敦煌风格（8种）</label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+                        <button class="style-card flex flex-col items-center justify-center gap-1 p-3.5 border rounded-xl text-xs font-medium transition bg-white" data-style="反弹琵琶">
+                            <span class="font-semibold text-sm" style="color:#2c2c2c;">反弹琵琶</span>
+                            <span class="text-[10px] leading-tight text-center" style="color:#9b8c7c;">飞天环绕·飘带飞舞</span>
                         </button>
-                        <button class="style-card flex items-center gap-2 p-4 border rounded-xl text-sm font-medium hover:border-gray-400 transition bg-white" data-style="人像优化">
-                            <span class="text-lg">📷</span> 人像优化
+                        <button class="style-card flex flex-col items-center justify-center gap-1 p-3.5 border rounded-xl text-xs font-medium transition bg-white" data-style="供养人像">
+                            <span class="font-semibold text-sm" style="color:#2c2c2c;">供养人像</span>
+                            <span class="text-[10px] leading-tight text-center" style="color:#9b8c7c;">晚唐华服·壁画原色</span>
                         </button>
-                        <button class="style-card flex items-center gap-2 p-4 border rounded-xl text-sm font-medium hover:border-gray-400 transition bg-white" data-style="城市景观">
-                            <span class="text-lg">🏙️</span> 城市景观
+                        <button class="style-card flex flex-col items-center justify-center gap-1 p-3.5 border rounded-xl text-xs font-medium transition bg-white" data-style="千佛光相">
+                            <span class="font-semibold text-sm" style="color:#2c2c2c;">千佛光相</span>
+                            <span class="text-[10px] leading-tight text-center" style="color:#9b8c7c;">放射状光相·庄严</span>
                         </button>
-                        <button class="style-card flex items-center gap-2 p-4 border rounded-xl text-sm font-medium hover:border-gray-400 transition bg-white" data-style="电影感">
-                            <span class="text-lg">🎬</span> 电影质感
+                        <button class="style-card flex flex-col items-center justify-center gap-1 p-3.5 border rounded-xl text-xs font-medium transition bg-white" data-style="九色鹿缘">
+                            <span class="font-semibold text-sm" style="color:#2c2c2c;">九色鹿缘</span>
+                            <span class="text-[10px] leading-tight text-center" style="color:#9b8c7c;">赭红山峦·神鹿故事</span>
+                        </button>
+                        <button class="style-card flex flex-col items-center justify-center gap-1 p-3.5 border rounded-xl text-xs font-medium transition bg-white" data-style="藻井天顶">
+                            <span class="font-semibold text-sm" style="color:#2c2c2c;">藻井天顶</span>
+                            <span class="text-[10px] leading-tight text-center" style="color:#9b8c7c;">联珠纹·莲花纹铺开</span>
+                        </button>
+                        <button class="style-card flex flex-col items-center justify-center gap-1 p-3.5 border rounded-xl text-xs font-medium transition bg-white" data-style="丝路驼影">
+                            <span class="font-semibold text-sm" style="color:#2c2c2c;">丝路驼影</span>
+                            <span class="text-[10px] leading-tight text-center" style="color:#9b8c7c;">西域商贾·沙漠落日</span>
+                        </button>
+                        <button class="style-card flex flex-col items-center justify-center gap-1 p-3.5 border rounded-xl text-xs font-medium transition bg-white" data-style="金刚怒目">
+                            <span class="font-semibold text-sm" style="color:#2c2c2c;">金刚怒目</span>
+                            <span class="text-[10px] leading-tight text-center" style="color:#9b8c7c;">护法金刚·火焰纹</span>
+                        </button>
+                        <button class="style-card flex flex-col items-center justify-center gap-1 p-3.5 border rounded-xl text-xs font-medium transition bg-white" data-style="斑驳千年">
+                            <span class="font-semibold text-sm" style="color:#2c2c2c;">斑驳千年</span>
+                            <span class="text-[10px] leading-tight text-center" style="color:#9b8c7c;">壁画剥落·岁月肌理</span>
                         </button>
                     </div>
                 </div>
 
                 <!-- 生成按钮 -->
-                <button id="generate-btn" class="w-full py-4 bg-black text-white rounded-xl font-semibold hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-gray-200">
-                    <i class="fa-solid fa-wand-magic-sparkles mr-2"></i>一键渲染
+                <button id="generate-btn" class="w-full py-4 rounded-xl font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg text-white" style="background-color:#b34d4a;box-shadow:0 8px 24px rgba(179,77,74,0.25);">
+                    一键渲染 · 穿越敦煌
                 </button>
 
-                <div id="status" class="text-center text-sm text-gray-500 hidden"></div>
+                <div id="status" class="text-center text-sm hidden" style="color:#8b7a6a;"></div>
             </div>
 
             <!-- 右侧结果 -->
-            <div class="result-frame border border-gray-100 rounded-2xl p-4 bg-white">
-                <div class="aspect-square bg-gray-50 rounded-xl flex items-center justify-center overflow-hidden relative">
-                    <img id="result-img" src="" alt="结果" class="hidden max-w-full max-h-full object-contain">
-                    <span id="result-placeholder" class="text-gray-300 text-sm flex flex-col items-center gap-2">
-                        <i class="fa-regular fa-image text-4xl"></i>
-                        等待生成
+            <div class="result-frame border rounded-2xl p-4 bg-white">
+                <div class="aspect-square rounded-xl flex items-center justify-center overflow-hidden relative" style="background-color:#faf7f2;">
+                    <img id="result-img" src="" alt="生成结果" class="hidden max-w-full max-h-full object-contain z-10">
+                    <span id="result-placeholder" class="flex flex-col items-center gap-2 z-10" style="color:#d5c8b8;">
+                        <span class="text-sm">等待生成飞天大片</span>
                     </span>
                 </div>
-                <button id="download-btn" class="mt-4 w-full py-2.5 border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition hidden">
-                    <i class="fa-solid fa-download mr-2"></i>下载高清图片
+                <button id="download-btn" class="mt-4 w-full py-3 border rounded-lg text-sm font-medium transition hidden hover:shadow-md" style="border-color:#d5c8b8;color:#7a6a5c;background:#fffefb;">
+                    下载高清飞天照片
                 </button>
             </div>
         </div>
     </section>
 
-    <!-- 作品展示 -->
-    <section id="gallery" class="max-w-6xl mx-auto px-6 py-16 border-t border-gray-100 relative z-10">
-        <h2 class="text-3xl font-bold mb-4 text-center">摄影作品展示</h2>
-        <p class="text-center text-gray-500 mb-12">以下是部分使用 AI 渲染前后的对比作品集</p>
-        <div class="grid md:grid-cols-3 gap-8">
-            <!-- 作品卡片（可替换为真实图片链接） -->
-            <div class="gallery-card group relative rounded-2xl overflow-hidden shadow-md border border-gray-100 bg-white">
-                <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="作品1" class="w-full aspect-square object-cover group-hover:scale-105 transition duration-700">
-                <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition flex flex-col justify-end p-5">
-                    <span class="text-white text-xs font-semibold uppercase tracking-wider mb-1">BEFORE</span>
-                    <p class="text-white text-sm font-medium">原始照片</p>
+    <!-- 作品展示 (8张真实图片) -->
+    <section id="gallery" class="max-w-6xl mx-auto px-6 py-16 relative z-10" style="border-top:1px solid #f0e8dd;">
+        <h2 class="text-3xl font-bold mb-2 text-center" style="color:#2c2c2c;">飞天作品展示</h2>
+        <p class="text-center mb-3" style="color:#9b8c7c;">以下是使用 AI 渲染的敦煌风格效果图</p>
+        <p class="text-center mb-12 text-xs italic" style="color:#c9a84c;">※ 图片为真实渲染结果</p>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <!-- 8张作品卡片，图片名称为风格名.png -->
+            <div class="gallery-card group relative rounded-2xl overflow-hidden shadow-md border bg-white" style="border-color:#e5d5c8;">
+                <img src="反弹琵琶.png" alt="反弹琵琶风格" class="w-full aspect-square object-cover group-hover:scale-105 transition duration-700">
+                <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition flex flex-col justify-end p-4">
+                    <span class="text-white text-xs font-semibold uppercase tracking-wider">反弹琵琶</span>
+                    <p class="text-white text-sm font-medium">飞天环绕，飘带飞舞</p>
                 </div>
             </div>
-            <div class="gallery-card group relative rounded-2xl overflow-hidden shadow-md border border-gray-100 bg-white">
-                <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=600&q=80" alt="作品2" class="w-full aspect-square object-cover group-hover:scale-105 transition duration-700">
-                <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition flex flex-col justify-end p-5">
-                    <span class="text-white text-xs font-semibold uppercase tracking-wider mb-1">AFTER</span>
-                    <p class="text-white text-sm font-medium">城市景观风格</p>
+            <div class="gallery-card group relative rounded-2xl overflow-hidden shadow-md border bg-white" style="border-color:#e5d5c8;">
+                <img src="供养人像.png" alt="供养人像风格" class="w-full aspect-square object-cover group-hover:scale-105 transition duration-700">
+                <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition flex flex-col justify-end p-4">
+                    <span class="text-white text-xs font-semibold uppercase tracking-wider">供养人像</span>
+                    <p class="text-white text-sm font-medium">晚唐华服，手持鲜花</p>
                 </div>
             </div>
-            <div class="gallery-card group relative rounded-2xl overflow-hidden shadow-md border border-gray-100 bg-white">
-                <img src="https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=600&q=80" alt="作品3" class="w-full aspect-square object-cover group-hover:scale-105 transition duration-700">
-                <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition flex flex-col justify-end p-5">
-                    <span class="text-white text-xs font-semibold uppercase tracking-wider mb-1">AFTER</span>
-                    <p class="text-white text-sm font-medium">电影质感</p>
+            <div class="gallery-card group relative rounded-2xl overflow-hidden shadow-md border bg-white" style="border-color:#e5d5c8;">
+                <img src="千佛光相.png" alt="千佛光相风格" class="w-full aspect-square object-cover group-hover:scale-105 transition duration-700">
+                <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition flex flex-col justify-end p-4">
+                    <span class="text-white text-xs font-semibold uppercase tracking-wider">千佛光相</span>
+                    <p class="text-white text-sm font-medium">千佛放射，庄严光相</p>
+                </div>
+            </div>
+            <div class="gallery-card group relative rounded-2xl overflow-hidden shadow-md border bg-white" style="border-color:#e5d5c8;">
+                <img src="九色鹿缘.png" alt="九色鹿缘风格" class="w-full aspect-square object-cover group-hover:scale-105 transition duration-700">
+                <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition flex flex-col justify-end p-4">
+                    <span class="text-white text-xs font-semibold uppercase tracking-wider">九色鹿缘</span>
+                    <p class="text-white text-sm font-medium">神鹿故事，赭红山峦</p>
+                </div>
+            </div>
+            <div class="gallery-card group relative rounded-2xl overflow-hidden shadow-md border bg-white" style="border-color:#e5d5c8;">
+                <img src="藻井天顶.png" alt="藻井天顶风格" class="w-full aspect-square object-cover group-hover:scale-105 transition duration-700">
+                <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition flex flex-col justify-end p-4">
+                    <span class="text-white text-xs font-semibold uppercase tracking-wider">藻井天顶</span>
+                    <p class="text-white text-sm font-medium">莲花纹，联珠纹铺开</p>
+                </div>
+            </div>
+            <div class="gallery-card group relative rounded-2xl overflow-hidden shadow-md border bg-white" style="border-color:#e5d5c8;">
+                <img src="丝路驼影.png" alt="丝路驼影风格" class="w-full aspect-square object-cover group-hover:scale-105 transition duration-700">
+                <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition flex flex-col justify-end p-4">
+                    <span class="text-white text-xs font-semibold uppercase tracking-wider">丝路驼影</span>
+                    <p class="text-white text-sm font-medium">胡帽牵驼，沙漠落日</p>
+                </div>
+            </div>
+            <div class="gallery-card group relative rounded-2xl overflow-hidden shadow-md border bg-white" style="border-color:#e5d5c8;">
+                <img src="金刚怒目.png" alt="金刚怒目风格" class="w-full aspect-square object-cover group-hover:scale-105 transition duration-700">
+                <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition flex flex-col justify-end p-4">
+                    <span class="text-white text-xs font-semibold uppercase tracking-wider">金刚怒目</span>
+                    <p class="text-white text-sm font-medium">护法金刚，火焰纹绕</p>
+                </div>
+            </div>
+            <div class="gallery-card group relative rounded-2xl overflow-hidden shadow-md border bg-white" style="border-color:#e5d5c8;">
+                <img src="斑驳千年.png" alt="斑驳千年风格" class="w-full aspect-square object-cover group-hover:scale-105 transition duration-700">
+                <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition flex flex-col justify-end p-4">
+                    <span class="text-white text-xs font-semibold uppercase tracking-wider">斑驳千年</span>
+                    <p class="text-white text-sm font-medium">壁画剥落，岁月肌理</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="border-t border-gray-100 py-12 text-center text-sm text-gray-400 relative z-10">
+    <!-- 页脚 -->
+    <footer class="py-12 text-center text-sm relative z-10" style="border-top:1px solid #f0e8dd;color:#b0a090;">
         <div class="max-w-4xl mx-auto px-6">
-            <p class="mb-2">&copy; 2025 PixShift · AI 摄影渲染服务</p>
-            <p class="text-xs">Powered by Qwen Image Edit</p>
+            <p class="mb-2" style="color:#8b7a6a;">&copy; 2026 敦煌幻境 · AI 飞天照相馆</p>
+            <p class="text-xs" style="color:#c0b0a0;">Powered by Qwen Image Edit</p>
         </div>
     </footer>
 
-<script>
-    // UI 元素
-    const uploadInput = document.getElementById('upload-input');
-    const previewImg = document.getElementById('preview-img');
-    const uploadPlaceholder = document.getElementById('upload-placeholder');
-    const uploadPreview = document.getElementById('upload-preview');
-    const styleCards = document.querySelectorAll('.style-card');
-    const generateBtn = document.getElementById('generate-btn');
-    const resultImg = document.getElementById('result-img');
-    const resultPlaceholder = document.getElementById('result-placeholder');
-    const downloadBtn = document.getElementById('download-btn');
-    const statusDiv = document.getElementById('status');
+    <script>
+        // UI 元素
+        const uploadInput = document.getElementById('upload-input');
+        const previewImg = document.getElementById('preview-img');
+        const uploadPlaceholder = document.getElementById('upload-placeholder');
+        const uploadPreview = document.getElementById('upload-preview');
+        const styleCards = document.querySelectorAll('.style-card');
+        const generateBtn = document.getElementById('generate-btn');
+        const resultImg = document.getElementById('result-img');
+        const resultPlaceholder = document.getElementById('result-placeholder');
+        const downloadBtn = document.getElementById('download-btn');
+        const statusDiv = document.getElementById('status');
 
-    let selectedStyle = null;
-    let originalImageData = null;  // 压缩后的 base64
+        let selectedStyle = null;
+        let originalImageData = null;
 
-    // 风格选择交互
-    styleCards.forEach(card => {
-        card.addEventListener('click', () => {
-            styleCards.forEach(c => c.classList.remove('active', 'border-gray-900', 'bg-gray-50'));
-            card.classList.add('active', 'border-gray-900', 'bg-gray-50');
-            selectedStyle = card.dataset.style;
-        });
-    });
-
-    // 默认选中第一个风格
-    styleCards[0].click();
-
-    // ========== 图片压缩函数 ==========
-    async function compressImage(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = new Image();
-                img.onload = () => {
-                    // 限制最大边长 1024，质量 0.7，大幅减小体积
-                    const maxDimension = 1024;
-                    let width = img.width;
-                    let height = img.height;
-
-                    if (width > height && width > maxDimension) {
-                        height = (height * maxDimension) / width;
-                        width = maxDimension;
-                    } else if (height > maxDimension) {
-                        width = (width * maxDimension) / height;
-                        height = maxDimension;
-                    }
-
-                    const canvas = document.createElement('canvas');
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-
-                    // 输出 JPEG base64，质量 0.7
-                    const base64 = canvas.toDataURL('image/jpeg', 0.7);
-                    resolve(base64);
-                };
-                img.onerror = () => reject(new Error('图片加载失败'));
-                img.src = e.target.result;
-            };
-            reader.onerror = () => reject(new Error('文件读取失败'));
-            reader.readAsDataURL(file);
-        });
-    }
-
-    // ========== 图片上传处理 ==========
-    async function handleFileSelect() {
-        const file = uploadInput.files[0];
-        if (!file) return;
-
-        if (!file.type.startsWith('image/')) {
-            alert('请选择图片文件');
-            return;
-        }
-        if (file.size > 10 * 1024 * 1024) {
-            alert('图片大小不能超过10MB');
-            return;
-        }
-
-        try {
-            // 压缩图片
-            const compressedBase64 = await compressImage(file);
-
-            // 显示预览
-            previewImg.src = compressedBase64;
-            uploadPlaceholder.classList.add('hidden');
-            uploadPreview.classList.remove('hidden');
-            originalImageData = compressedBase64; // 保存压缩后的 base64
-
-            // 调试：查看 base64 长度和估算大小
-            const estimatedKB = (compressedBase64.length * 0.75 / 1024).toFixed(2);
-            console.log(`压缩后 Base64 长度: ${compressedBase64.length}，约 ${estimatedKB} KB`);
-        } catch (err) {
-            alert('图片处理失败，请重试');
-            console.error(err);
-        }
-    }
-
-    uploadInput.addEventListener('change', handleFileSelect);
-
-    // ========== 拖拽上传支持 ==========
-    const dropzone = document.getElementById('dropzone');
-    dropzone.addEventListener('dragover', (e) => e.preventDefault());
-    dropzone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        if (e.dataTransfer.files.length) {
-            uploadInput.files = e.dataTransfer.files;
-            handleFileSelect();
-        }
-    });
-
-    // ========== 渲染生成 ==========
-    generateBtn.addEventListener('click', async () => {
-        if (!originalImageData) {
-            alert('请先上传图片');
-            return;
-        }
-        if (!selectedStyle) {
-            alert('请选择风格');
-            return;
-        }
-
-        // UI 加载状态
-        generateBtn.disabled = true;
-        generateBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>正在渲染...';
-        statusDiv.classList.remove('hidden');
-        statusDiv.textContent = '⏳ AI 正在处理，请稍候...';
-        resultImg.classList.add('hidden');
-        resultPlaceholder.classList.remove('hidden');
-        downloadBtn.classList.add('hidden');
-
-        try {
-            const response = await fetch('/api/image-edit', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    style_name: selectedStyle,
-                    image_base64: originalImageData
-                })
+        // 风格选择交互
+        styleCards.forEach(card => {
+            card.addEventListener('click', () => {
+                styleCards.forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+                selectedStyle = card.dataset.style;
             });
+        });
 
-            // 根据 Content-Type 判断是否 JSON
-            let data;
-            const contentType = response.headers.get('content-type');
-            if (contentType && contentType.includes('application/json')) {
-                data = await response.json();
-            } else {
-                const text = await response.text();
-                throw new Error(`服务器返回非 JSON 响应 (${response.status}): ${text.substring(0, 100)}`);
-            }
-
-            if (!data.success) {
-                throw new Error(data.error || '生成失败');
-            }
-
-            // 显示结果图片
-            resultImg.src = data.imageUrl;
-            resultImg.onload = () => {
-                resultPlaceholder.classList.add('hidden');
-                resultImg.classList.remove('hidden');
-                downloadBtn.classList.remove('hidden');
-                downloadBtn.onclick = () => {
-                    const a = document.createElement('a');
-                    a.href = data.imageUrl;
-                    a.download = `pixshift-${selectedStyle}.jpg`;
-                    a.click();
-                };
-            };
-            statusDiv.textContent = '✅ 渲染完成';
-
-        } catch (err) {
-            statusDiv.textContent = `❌ ${err.message}`;
-            alert('生成失败: ' + err.message);
-        } finally {
-            generateBtn.disabled = false;
-            generateBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles mr-2"></i>一键渲染';
-            // 5秒后隐藏状态栏
-            setTimeout(() => {
-                statusDiv.classList.add('hidden');
-            }, 5000);
+        // 默认选中第一个风格
+        if (styleCards.length > 0) {
+            styleCards[0].classList.add('active');
+            selectedStyle = styleCards[0].dataset.style;
         }
-    });
-</script>
+
+        // 图片压缩函数
+        async function compressImage(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const maxDimension = 1024;
+                        let width = img.width;
+                        let height = img.height;
+                        if (width > height && width > maxDimension) {
+                            height = (height * maxDimension) / width;
+                            width = maxDimension;
+                        } else if (height > maxDimension) {
+                            width = (width * maxDimension) / height;
+                            height = maxDimension;
+                        }
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        const base64 = canvas.toDataURL('image/jpeg', 0.7);
+                        resolve(base64);
+                    };
+                    img.onerror = () => reject(new Error('图片加载失败'));
+                    img.src = e.target.result;
+                };
+                reader.onerror = () => reject(new Error('文件读取失败'));
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // 上传处理
+        async function handleFileSelect() {
+            const file = uploadInput.files[0];
+            if (!file) return;
+            if (!file.type.startsWith('image/')) {
+                alert('请选择图片文件');
+                return;
+            }
+            if (file.size > 10 * 1024 * 1024) {
+                alert('图片大小不能超过10MB');
+                return;
+            }
+            try {
+                const compressedBase64 = await compressImage(file);
+                previewImg.src = compressedBase64;
+                uploadPlaceholder.classList.add('hidden');
+                uploadPreview.classList.remove('hidden');
+                originalImageData = compressedBase64;
+            } catch (err) {
+                alert('图片处理失败，请重试');
+                console.error(err);
+            }
+        }
+
+        uploadInput.addEventListener('change', handleFileSelect);
+
+        // 拖拽上传
+        const dropzone = document.getElementById('dropzone');
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.style.borderColor = '#c9a84c';
+            dropzone.style.backgroundColor = '#fdf9ed';
+        });
+        dropzone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            dropzone.style.borderColor = '#e5d5c8';
+            dropzone.style.backgroundColor = '#fffefb';
+        });
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.style.borderColor = '#e5d5c8';
+            dropzone.style.backgroundColor = '#fffefb';
+            if (e.dataTransfer.files.length) {
+                uploadInput.files = e.dataTransfer.files;
+                handleFileSelect();
+            }
+        });
+
+        // 渲染生成
+        generateBtn.addEventListener('click', async () => {
+            if (!originalImageData) {
+                alert('请先上传人像照片');
+                return;
+            }
+            if (!selectedStyle) {
+                alert('请选择敦煌风格');
+                return;
+            }
+
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = '正在渲染飞天大片...';
+            statusDiv.classList.remove('hidden');
+            statusDiv.textContent = 'AI 正在处理，请稍候...';
+            resultImg.classList.add('hidden');
+            resultPlaceholder.classList.remove('hidden');
+            downloadBtn.classList.add('hidden');
+
+            try {
+                const response = await fetch('/api/dunhuang-render', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        style_name: selectedStyle,
+                        image_base64: originalImageData
+                    })
+                });
+
+                let data;
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    data = await response.json();
+                } else {
+                    const text = await response.text();
+                    throw new Error(`服务器返回异常 (${response.status})`);
+                }
+
+                if (!data.success) {
+                    throw new Error(data.error || '生成失败');
+                }
+
+                resultImg.src = data.imageUrl;
+                resultImg.onload = () => {
+                    resultPlaceholder.classList.add('hidden');
+                    resultImg.classList.remove('hidden');
+                    downloadBtn.classList.remove('hidden');
+                    downloadBtn.onclick = () => {
+                        const a = document.createElement('a');
+                        a.href = data.imageUrl;
+                        a.download = `dunhuang-${selectedStyle}.jpg`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                    };
+                };
+                statusDiv.textContent = '渲染完成！';
+                statusDiv.style.color = '#4a7c59';
+
+            } catch (err) {
+                statusDiv.textContent = `失败：${err.message}`;
+                statusDiv.style.color = '#b34d4a';
+                alert('生成失败: ' + err.message);
+            } finally {
+                generateBtn.disabled = false;
+                generateBtn.innerHTML = '一键渲染 · 穿越敦煌';
+                setTimeout(() => {
+                    statusDiv.classList.add('hidden');
+                    statusDiv.style.color = '#8b7a6a';
+                }, 6000);
+            }
+        });
+    </script>
 </body>
 </html>
