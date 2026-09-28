@@ -72,10 +72,7 @@
             text-decoration: none;
         }
 
-        /* =========================
-           Navigation
-        ========================= */
-
+        /* Navigation */
         .nav {
             width: 100%;
             border-bottom: 1px solid var(--border);
@@ -140,10 +137,7 @@
             color: var(--text);
         }
 
-        /* =========================
-           Hero
-        ========================= */
-
+        /* Hero */
         .hero {
             max-width: var(--max-width);
             margin: 0 auto;
@@ -198,10 +192,7 @@
             font-size: 15px;
         }
 
-        /* =========================
-           Section
-        ========================= */
-
+        /* Section */
         .section {
             max-width: var(--max-width);
             margin: 0 auto;
@@ -237,10 +228,7 @@
             font-size: 14px;
         }
 
-        /* =========================
-           Studio
-        ========================= */
-
+        /* Studio */
         .studio {
             display: grid;
             grid-template-columns: .9fr 1.1fr;
@@ -273,7 +261,6 @@
         }
 
         /* Upload */
-
         .upload-area {
             min-height: 430px;
             border: 1px dashed var(--border-dark);
@@ -372,10 +359,7 @@
             color: var(--text);
         }
 
-        /* =========================
-           Style Cards
-        ========================= */
-
+        /* Style Cards */
         .style-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -419,7 +403,6 @@
             border-radius: 50%;
         }
 
-        /* 示例图片覆盖层 */
         .style-preview-img {
             position: absolute;
             inset: 0;
@@ -429,11 +412,8 @@
             z-index: 1;
         }
 
-        /* 六种风格的抽象预览（后备） */
-
         .preview-abstract {
-            background:
-                linear-gradient(135deg, #eee9df 0 40%, #d2c6b5 40% 65%, #f7f3eb 65%);
+            background: linear-gradient(135deg, #eee9df 0 40%, #d2c6b5 40% 65%, #f7f3eb 65%);
         }
 
         .preview-abstract::before {
@@ -454,8 +434,7 @@
         }
 
         .preview-classical {
-            background:
-                linear-gradient(120deg, #d8c9a9, #b89e71);
+            background: linear-gradient(120deg, #d8c9a9, #b89e71);
         }
 
         .preview-classical::before {
@@ -483,8 +462,7 @@
         .preview-comic::before {
             width: 100px;
             height: 100px;
-            background:
-                radial-gradient(circle, #222 0 3px, transparent 4px);
+            background: radial-gradient(circle, #222 0 3px, transparent 4px);
             background-size: 12px 12px;
             left: 20px;
             top: 12px;
@@ -500,8 +478,7 @@
         }
 
         .preview-oil {
-            background:
-                linear-gradient(135deg, #aaa 0 20%, #888 20% 35%, #c0b5a1 35% 55%, #777 55% 75%, #b7aa91 75%);
+            background: linear-gradient(135deg, #aaa 0 20%, #888 20% 35%, #c0b5a1 35% 55%, #777 55% 75%, #b7aa91 75%);
         }
 
         .preview-oil::before {
@@ -523,8 +500,7 @@
         }
 
         .preview-watercolor {
-            background:
-                linear-gradient(140deg, #d9e1dd, #c8d3db 45%, #e4d9c9);
+            background: linear-gradient(140deg, #d9e1dd, #c8d3db 45%, #e4d9c9);
         }
 
         .preview-watercolor::before {
@@ -547,8 +523,7 @@
         }
 
         .preview-film {
-            background:
-                linear-gradient(135deg, #7d776d, #b0a18c);
+            background: linear-gradient(135deg, #7d776d, #b0a18c);
         }
 
         .preview-film::before {
@@ -597,10 +572,7 @@
             line-height: 1.6;
         }
 
-        /* =========================
-           Generate
-        ========================= */
-
+        /* Generate */
         .generate-area {
             margin-top: 20px;
         }
@@ -638,10 +610,7 @@
             font-size: 12px;
         }
 
-        /* =========================
-           Result
-        ========================= */
-
+        /* Result */
         .result-section {
             display: none;
         }
@@ -699,10 +668,7 @@
             font-size: 13px;
         }
 
-        /* =========================
-           History
-        ========================= */
-
+        /* History */
         .history-toolbar {
             display: flex;
             justify-content: flex-end;
@@ -722,6 +688,7 @@
             overflow: hidden;
             cursor: pointer;
             transition: transform .2s ease, border-color .2s ease;
+            position: relative;
         }
 
         .history-item:hover {
@@ -753,10 +720,22 @@
             color: var(--text-secondary);
         }
 
-        /* =========================
-           Philosophy
-        ========================= */
+        .history-item-delete {
+            align-self: flex-start;
+            border: 0;
+            background: none;
+            color: #a0a09b;
+            font-size: 10px;
+            cursor: pointer;
+            padding: 4px 0 0;
+            transition: color .2s ease;
+        }
 
+        .history-item-delete:hover {
+            color: #d9534f;
+        }
+
+        /* Philosophy */
         .statement {
             padding: 110px 0 120px;
             border-top: 1px solid var(--border);
@@ -779,10 +758,7 @@
             color: var(--text-secondary);
         }
 
-        /* =========================
-           Footer
-        ========================= */
-
+        /* Footer */
         footer {
             border-top: 1px solid var(--border);
             padding: 28px 24px;
@@ -797,10 +773,7 @@
             font-size: 12px;
         }
 
-        /* =========================
-           Loading
-        ========================= */
-
+        /* Loading */
         .loading {
             position: fixed;
             inset: 0;
@@ -841,10 +814,7 @@
             }
         }
 
-        /* =========================
-           Responsive
-        ========================= */
-
+        /* Responsive */
         @media (max-width: 850px) {
             .hero {
                 grid-template-columns: 1fr;
@@ -918,393 +888,146 @@
 
 <body>
 
-<!-- =========================
-     Navigation
-========================= -->
-
+<!-- Navigation -->
 <nav class="nav">
     <div class="nav-inner">
-
         <a href="#" class="logo">
             <span class="logo-mark"></span>
             <span>PixShift</span>
         </a>
-
         <div class="nav-links">
             <a href="#studio">智谱工坊</a>
             <a href="#styles">AI-Style</a>
             <a href="#history">历史记录</a>
             <a href="#about">关于</a>
         </div>
-
     </div>
 </nav>
 
-
-<!-- =========================
-     Hero
-========================= -->
-
+<!-- Hero -->
 <header class="hero">
-
     <div>
-        <div class="hero-kicker">
-            AI 智谱智绘工作室
-        </div>
-
-        <h1 class="hero-title">
-            Pixshift<br>
-            <span>记录世界。</span>
-        </h1>
-
+        <div class="hero-kicker">AI 智谱智绘工作室</div>
+        <h1 class="hero-title">Pixshift<br><span>记录世界。</span></h1>
         <p class="hero-description">
             PixShift 将普通照片通过 AI 转换为不同的视觉表达——
             从中国古画、油画质感，到漫画、胶片与抽象编辑设计。
         </p>
     </div>
-
     <div class="hero-side">
         <strong>记录无限可能。</strong>
-        上传照片，选择一种视觉语言，
-        让 AI 重新诠释另一种生活。
+        上传照片，选择一种视觉语言，让 AI 重新诠释另一种生活。
     </div>
-
 </header>
 
-
-<!-- =========================
-     Studio
-========================= -->
-
+<!-- Studio -->
 <section class="section" id="studio">
-
     <div class="section-header">
-
         <div>
             <div class="section-number">01 / 智谱工坊</div>
             <h2 class="section-title">Create你的图像</h2>
         </div>
-
-        <p class="section-description">
-            上传照片并选择视觉风格。
-            PixShift 将为您创建新的图像
-        </p>
-
+        <p class="section-description">上传照片并选择视觉风格。PixShift 将为您创建新的图像</p>
     </div>
-
 
     <div class="studio">
-
         <!-- Upload -->
-
         <div class="panel">
-
-            <div class="panel-label">
-                <strong>原图</strong>
-                <span>01</span>
-            </div>
-
-            <div
-                class="upload-area"
-                id="uploadArea"
-            >
-
-                <div
-                    class="upload-empty"
-                    id="uploadEmpty"
-                >
-
+            <div class="panel-label"><strong>原图</strong><span>01</span></div>
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-empty" id="uploadEmpty">
                     <div class="upload-icon">＋</div>
-
-                    <div class="upload-title">
-                        上传一张图片
-                    </div>
-
-                    <div class="upload-subtitle">
-                        JPG / PNG / WEBP · 最大 10 MB
-                    </div>
-
-                    <button
-                        class="upload-button"
-                        id="uploadButton"
-                        type="button"
-                    >
-                        选择图片
-                    </button>
-
+                    <div class="upload-title">上传一张图片</div>
+                    <div class="upload-subtitle">JPG / PNG / WEBP · 最大 10 MB</div>
+                    <button class="upload-button" id="uploadButton" type="button">选择图片</button>
                 </div>
-
-                <img
-                    id="previewImage"
-                    class="preview-image"
-                    alt="已上传图片预览"
-                    style="display:none;"
-                >
-
+                <img id="previewImage" class="preview-image" alt="已上传图片预览" style="display:none;">
             </div>
-
-            <input
-                id="fileInput"
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-            >
-
-            <div
-                class="preview-actions"
-                id="previewActions"
-                style="display:none;"
-            >
-                <span class="text-button">
-                    图片已加载
-                </span>
-
-                <button
-                    class="text-button"
-                    id="removeImage"
-                    type="button"
-                >
-                    移除
-                </button>
+            <input id="fileInput" type="file" accept="image/jpeg,image/png,image/webp">
+            <div class="preview-actions" id="previewActions" style="display:none;">
+                <span class="text-button">图片已加载</span>
+                <button class="text-button" id="removeImage" type="button">移除</button>
             </div>
-
         </div>
-
 
         <!-- Styles -->
-
         <div class="panel" id="styles">
-
-            <div class="panel-label">
-                <strong>风格</strong>
-                <span>02</span>
-            </div>
-
+            <div class="panel-label"><strong>风格</strong><span>02</span></div>
             <div class="style-grid">
-
-                <button
-                    class="style-card selected"
-                    data-style="photo-abstract-editorial"
-                    type="button"
-                >
-                    <div class="style-preview preview-abstract">
-                        <img class="style-preview-img" src="极简.png" alt="">
-                    </div>
-
+                <button class="style-card selected" data-style="photo-abstract-editorial" type="button">
+                    <div class="style-preview preview-abstract"><img class="style-preview-img" src="极简.png" alt=""></div>
                     <div class="style-content">
-                        <div class="style-name">
-                            <span class="style-name-cn">极简抽象</span>
-                            <span class="style-name-en">EDITORIAL</span>
-                        </div>
-
-                        <p class="style-description">
-                            将照片提炼为空间、色彩与视觉节奏。
-                        </p>
+                        <div class="style-name"><span class="style-name-cn">极简抽象</span><span class="style-name-en">EDITORIAL</span></div>
+                        <p class="style-description">将照片提炼为空间、色彩与视觉节奏。</p>
                     </div>
                 </button>
-
-
-                <button
-                    class="style-card"
-                    data-style="classical-painting"
-                    type="button"
-                >
-                    <div class="style-preview preview-classical">
-                        <img class="style-preview-img" src="古画.png" alt="">
-                    </div>
-
+                <button class="style-card" data-style="classical-painting" type="button">
+                    <div class="style-preview preview-classical"><img class="style-preview-img" src="古画.png" alt=""></div>
                     <div class="style-content">
-                        <div class="style-name">
-                            <span class="style-name-cn">中国古画</span>
-                            <span class="style-name-en">CLASSICAL</span>
-                        </div>
-
-                        <p class="style-description">
-                            将摄影画面转化为传统中国绘画语言。
-                        </p>
+                        <div class="style-name"><span class="style-name-cn">中国古画</span><span class="style-name-en">CLASSICAL</span></div>
+                        <p class="style-description">将摄影画面转化为传统中国绘画语言。</p>
                     </div>
                 </button>
-
-
-                <button
-                    class="style-card"
-                    data-style="american-comic"
-                    type="button"
-                >
-                    <div class="style-preview preview-comic">
-                        <img class="style-preview-img" src="漫画.png" alt="">
-                    </div>
-
+                <button class="style-card" data-style="american-comic" type="button">
+                    <div class="style-preview preview-comic"><img class="style-preview-img" src="漫画.png" alt=""></div>
                     <div class="style-content">
-                        <div class="style-name">
-                            <span class="style-name-cn">美式漫画</span>
-                            <span class="style-name-en">COMIC</span>
-                        </div>
-
-                        <p class="style-description">
-                            强烈线稿、网点与漫画分镜视觉。
-                        </p>
+                        <div class="style-name"><span class="style-name-cn">美式漫画</span><span class="style-name-en">COMIC</span></div>
+                        <p class="style-description">强烈线稿、网点与漫画分镜视觉。</p>
                     </div>
                 </button>
-
-
-                <button
-                    class="style-card"
-                    data-style="oil-painting"
-                    type="button"
-                >
-                    <div class="style-preview preview-oil">
-                        <img class="style-preview-img" src="油画.png" alt="">
-                    </div>
-
+                <button class="style-card" data-style="oil-painting" type="button">
+                    <div class="style-preview preview-oil"><img class="style-preview-img" src="油画.png" alt=""></div>
                     <div class="style-content">
-                        <div class="style-name">
-                            <span class="style-name-cn">油画</span>
-                            <span class="style-name-en">OIL</span>
-                        </div>
-
-                        <p class="style-description">
-                            厚重笔触、颜料肌理与绘画质感。
-                        </p>
+                        <div class="style-name"><span class="style-name-cn">油画</span><span class="style-name-en">OIL</span></div>
+                        <p class="style-description">厚重笔触、颜料肌理与绘画质感。</p>
                     </div>
                 </button>
-
-
-                <button
-                    class="style-card"
-                    data-style="watercolor"
-                    type="button"
-                >
-                    <div class="style-preview preview-watercolor">
-                        <img class="style-preview-img" src="水彩.png" alt="">
-                    </div>
-
+                <button class="style-card" data-style="watercolor" type="button">
+                    <div class="style-preview preview-watercolor"><img class="style-preview-img" src="水彩.png" alt=""></div>
                     <div class="style-content">
-                        <div class="style-name">
-                            <span class="style-name-cn">水彩</span>
-                            <span class="style-name-en">WATERCOLOR</span>
-                        </div>
-
-                        <p class="style-description">
-                            柔和透明的色层与自然晕染。
-                        </p>
+                        <div class="style-name"><span class="style-name-cn">水彩</span><span class="style-name-en">WATERCOLOR</span></div>
+                        <p class="style-description">柔和透明的色层与自然晕染。</p>
                     </div>
                 </button>
-
-
-                <button
-                    class="style-card"
-                    data-style="analog-film"
-                    type="button"
-                >
-                    <div class="style-preview preview-film">
-                        <img class="style-preview-img" src="胶片.png" alt="">
-                    </div>
-
+                <button class="style-card" data-style="analog-film" type="button">
+                    <div class="style-preview preview-film"><img class="style-preview-img" src="胶片.png" alt=""></div>
                     <div class="style-content">
-                        <div class="style-name">
-                            <span class="style-name-cn">胶片摄影</span>
-                            <span class="style-name-en">ANALOG FILM</span>
-                        </div>
-
-                        <p class="style-description">
-                            复古色彩、颗粒与真实胶片氛围。
-                        </p>
+                        <div class="style-name"><span class="style-name-cn">胶片摄影</span><span class="style-name-en">ANALOG FILM</span></div>
+                        <p class="style-description">复古色彩、颗粒与真实胶片氛围。</p>
                     </div>
                 </button>
-
             </div>
-
 
             <div class="generate-area">
-
-                <button
-                    class="generate-button"
-                    id="generateButton"
-                    disabled
-                    type="button"
-                >
-                    生成图片
-                </button>
-
-                <div
-                    class="status"
-                    id="status"
-                ></div>
-
+                <button class="generate-button" id="generateButton" disabled type="button">生成图片</button>
+                <div class="status" id="status"></div>
             </div>
-
         </div>
-
     </div>
-
 </section>
 
-
-<!-- =========================
-     Result
-========================= -->
-
-<section
-    class="section result-section"
-    id="resultSection"
->
-
+<!-- Result -->
+<section class="section result-section" id="resultSection">
     <div class="section-header">
-
         <div>
             <div class="section-number">03 / 生成结果</div>
             <h2 class="section-title">你的风格化图片</h2>
         </div>
-
-        <p class="section-description">
-            原照片已重新诠释。
-        </p>
-
+        <p class="section-description">原照片已重新诠释。</p>
     </div>
-
-
     <div class="result-container">
-
         <div class="result-image-wrap">
-
-            <img
-                id="resultImage"
-                class="result-image"
-                alt="生成结果"
-            >
-
+            <img id="resultImage" class="result-image" alt="生成结果">
         </div>
-
         <div class="result-footer">
-
-            <div
-                class="result-info"
-                id="resultInfo"
-            >
-                风格: <strong>—</strong>
-            </div>
-
-            <button
-                class="download-button"
-                id="downloadButton"
-                type="button"
-            >
-                下载图片
-            </button>
-
+            <div class="result-info" id="resultInfo">风格: <strong>—</strong></div>
+            <button class="download-button" id="downloadButton" type="button">下载图片</button>
         </div>
-
     </div>
-
 </section>
 
-
-<!-- =========================
-     History
-========================= -->
-
+<!-- History -->
 <section class="section" id="history">
-
     <div class="section-header">
         <div>
             <div class="section-number">04 / 历史记录</div>
@@ -1312,82 +1035,37 @@
         </div>
         <p class="section-description">最近生成的作品会保存在本地浏览器中。</p>
     </div>
-
     <div class="history-toolbar">
         <button class="text-button" id="clearHistoryButton" type="button">清空历史</button>
     </div>
-
     <div class="history-grid" id="historyGrid"></div>
-
 </section>
 
-
-<!-- =========================
-     Statement
-========================= -->
-
-<section
-    class="statement"
-    id="about"
->
-
+<!-- Statement -->
+<section class="statement" id="about">
     <div class="statement-inner">
-
-        <div class="statement-text">
-            记录当下，
-            <span>探索世界的无限可能。</span>
-        </div>
-
+        <div class="statement-text">记录当下，<span>探索世界的无限可能。</span></div>
     </div>
-
 </section>
 
-
-<!-- =========================
-     Footer
-========================= -->
-
+<!-- Footer -->
 <footer>
-
     <div class="footer-inner">
-
         <span>© 2026 PixShift</span>
-
         <span>智谱智绘AI工作室</span>
-
     </div>
-
 </footer>
 
-
-<!-- =========================
-     Loading
-========================= -->
-
-<div
-    class="loading"
-    id="loading"
->
-
+<!-- Loading -->
+<div class="loading" id="loading">
     <div class="loading-box">
-
         <div class="loading-dot"></div>
-
-        <div class="loading-text">
-            PixShift 正在转换你的图片…
-        </div>
-
+        <div class="loading-text">PixShift 正在转换你的图片…</div>
     </div>
-
 </div>
 
-
 <script>
-
-    /* =========================
-       DOM
-    ========================= */
-
+    /* DOM */
     const fileInput = document.getElementById("fileInput");
     const uploadButton = document.getElementById("uploadButton");
     const uploadArea = document.getElementById("uploadArea");
@@ -1406,7 +1084,6 @@
     const resultInfo = document.getElementById("resultInfo");
     const downloadButton = document.getElementById("downloadButton");
 
-    // 历史记录相关元素
     const historyGrid = document.getElementById("historyGrid");
     const clearHistoryButton = document.getElementById("clearHistoryButton");
 
@@ -1414,10 +1091,7 @@
     let originalImageData = null;
     let resultImageUrl = null;
 
-    /* =========================
-       历史记录管理
-    ========================= */
-
+    /* History management */
     const HISTORY_STORAGE_KEY = "pixshift_history";
     const MAX_HISTORY_ITEMS = 12;
 
@@ -1442,7 +1116,6 @@
     function addHistoryItem(item) {
         const history = getHistory();
         history.unshift(item);
-        // 限制最大条数
         if (history.length > MAX_HISTORY_ITEMS) {
             history.length = MAX_HISTORY_ITEMS;
         }
@@ -1450,9 +1123,15 @@
         renderHistory();
     }
 
+    function deleteHistoryItem(index) {
+        const history = getHistory();
+        history.splice(index, 1);
+        saveHistory(history);
+        renderHistory();
+    }
+
     function renderHistory() {
         if (!historyGrid) return;
-
         const history = getHistory();
         historyGrid.innerHTML = "";
 
@@ -1461,7 +1140,7 @@
             return;
         }
 
-        history.forEach(item => {
+        history.forEach((item, index) => {
             const card = document.createElement("div");
             card.className = "history-item";
 
@@ -1484,11 +1163,20 @@
             info.appendChild(styleSpan);
             info.appendChild(dateSpan);
 
+            const deleteBtn = document.createElement("button");
+            deleteBtn.className = "history-item-delete";
+            deleteBtn.textContent = "删除";
+            deleteBtn.type = "button";
+            deleteBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                deleteHistoryItem(index);
+            });
+            info.appendChild(deleteBtn);
+
             card.appendChild(img);
             card.appendChild(info);
 
             card.addEventListener("click", () => {
-                // 点击历史项，加载到结果区域
                 resultImageUrl = item.imageUrl;
                 resultImage.src = item.imageUrl;
                 resultInfo.innerHTML = `风格: <strong>${escapeHtml(item.styleName || "未知风格")}</strong>`;
@@ -1505,426 +1193,176 @@
         renderHistory();
     }
 
-    // 初始化历史记录
     renderHistory();
-
-    // 清空历史按钮事件
     clearHistoryButton.addEventListener("click", clearHistory);
 
-
-    /* =========================
-       Style selection
-    ========================= */
-
+    /* Style selection */
     document.querySelectorAll(".style-card").forEach(card => {
-
         card.addEventListener("click", () => {
-
-            document.querySelectorAll(".style-card")
-                .forEach(item => item.classList.remove("selected"));
-
+            document.querySelectorAll(".style-card").forEach(item => item.classList.remove("selected"));
             card.classList.add("selected");
-
             selectedStyle = card.dataset.style;
-
             updateGenerateButton();
-
         });
-
     });
 
-
-    /* =========================
-       File selection
-    ========================= */
-
-    uploadButton.addEventListener("click", () => {
-        fileInput.click();
-    });
-
+    /* File selection */
+    uploadButton.addEventListener("click", () => fileInput.click());
 
     fileInput.addEventListener("change", event => {
-
         const file = event.target.files[0];
-
-        if (!file) {
-            return;
-        }
-
-        handleFile(file);
-
+        if (file) handleFile(file);
     });
 
-
-    /* =========================
-       Drag & Drop
-    ========================= */
-
+    /* Drag & Drop */
     uploadArea.addEventListener("dragover", event => {
-
         event.preventDefault();
-
         uploadArea.classList.add("dragover");
-
     });
 
-
-    uploadArea.addEventListener("dragleave", () => {
-
-        uploadArea.classList.remove("dragover");
-
-    });
-
+    uploadArea.addEventListener("dragleave", () => uploadArea.classList.remove("dragover"));
 
     uploadArea.addEventListener("drop", event => {
-
         event.preventDefault();
-
         uploadArea.classList.remove("dragover");
-
         const file = event.dataTransfer.files[0];
-
-        if (!file) {
-            return;
-        }
-
-        handleFile(file);
-
+        if (file) handleFile(file);
     });
-
-
-    /* =========================
-       Handle image
-    ========================= */
 
     async function handleFile(file) {
-
         if (!file.type.startsWith("image/")) {
-
             showStatus("请选择图片文件。");
-
             return;
-
         }
-
         if (file.size > 10 * 1024 * 1024) {
-
             showStatus("图片必须小于 10 MB。");
-
             return;
-
         }
-
         try {
-
             originalImageData = await compressImage(file);
-
             previewImage.src = originalImageData;
-
             previewImage.style.display = "block";
-
             uploadEmpty.style.display = "none";
-
             previewActions.style.display = "flex";
-
             updateGenerateButton();
-
             showStatus("");
-
         } catch (error) {
-
             console.error(error);
-
             showStatus("无法读取此图片。");
-
         }
-
     }
-
-
-    /* =========================
-       Image compression
-    ========================= */
 
     function compressImage(file) {
-
         return new Promise((resolve, reject) => {
-
             const reader = new FileReader();
-
             reader.onload = event => {
-
                 const img = new Image();
-
                 img.onload = () => {
-
                     const maxDimension = 1536;
-
                     let width = img.width;
                     let height = img.height;
-
                     if (width > maxDimension || height > maxDimension) {
-
                         if (width > height) {
-
-                            height = Math.round(
-                                height * maxDimension / width
-                            );
-
+                            height = Math.round(height * maxDimension / width);
                             width = maxDimension;
-
                         } else {
-
-                            width = Math.round(
-                                width * maxDimension / height
-                            );
-
+                            width = Math.round(width * maxDimension / height);
                             height = maxDimension;
-
                         }
-
                     }
-
                     const canvas = document.createElement("canvas");
-
                     canvas.width = width;
                     canvas.height = height;
-
                     const ctx = canvas.getContext("2d");
-
-                    ctx.drawImage(
-                        img,
-                        0,
-                        0,
-                        width,
-                        height
-                    );
-
-                    resolve(
-                        canvas.toDataURL(
-                            "image/jpeg",
-                            0.82
-                        )
-                    );
-
+                    ctx.drawImage(img, 0, 0, width, height);
+                    resolve(canvas.toDataURL("image/jpeg", 0.82));
                 };
-
                 img.onerror = reject;
-
                 img.src = event.target.result;
-
             };
-
             reader.onerror = reject;
-
             reader.readAsDataURL(file);
-
         });
-
     }
-
-
-    /* =========================
-       Remove image
-    ========================= */
 
     removeImage.addEventListener("click", () => {
-
         originalImageData = null;
-
         fileInput.value = "";
-
         previewImage.src = "";
-
         previewImage.style.display = "none";
-
         uploadEmpty.style.display = "flex";
-
         previewActions.style.display = "none";
-
         updateGenerateButton();
-
         resultSection.classList.remove("show");
-
     });
-
-
-    /* =========================
-       Button state
-    ========================= */
 
     function updateGenerateButton() {
-
         generateButton.disabled = !originalImageData;
-
     }
-
-
-    /* =========================
-       Generate
-    ========================= */
 
     generateButton.addEventListener("click", async () => {
-
         if (!originalImageData) {
-
             showStatus("请先上传图片。");
-
             return;
-
         }
-
         loading.classList.add("show");
-
         generateButton.disabled = true;
-
         showStatus("");
-
         try {
-
-            const response = await fetch(
-                "/api/dunhuang-render",
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-
-                    body: JSON.stringify({
-                        style_id: selectedStyle,
-                        image_base64: originalImageData
-                    })
-                }
-            );
-
-            const data = await response.json();
-
-            if (!response.ok || !data.success) {
-
-                throw new Error(
-                    data.error || "图像生成失败。"
-                );
-
-            }
-
-            resultImageUrl = data.imageUrl;
-
-            resultImage.src = resultImageUrl;
-
-            const styleName = data.style_name || selectedStyle;
-
-            resultInfo.innerHTML =
-                `风格: <strong>${escapeHtml(styleName)}</strong>`;
-
-            resultSection.classList.add("show");
-
-            // 添加到历史记录
-            addHistoryItem({
-                imageUrl: resultImageUrl,
-                styleName: styleName,
-                timestamp: new Date().toISOString()
+            const response = await fetch("/api/dunhuang-render", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ style_id: selectedStyle, image_base64: originalImageData })
             });
-
-            setTimeout(() => {
-
-                resultSection.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start"
-                });
-
-            }, 100);
-
+            const data = await response.json();
+            if (!response.ok || !data.success) throw new Error(data.error || "图像生成失败。");
+            resultImageUrl = data.imageUrl;
+            resultImage.src = resultImageUrl;
+            const styleName = data.style_name || selectedStyle;
+            resultInfo.innerHTML = `风格: <strong>${escapeHtml(styleName)}</strong>`;
+            resultSection.classList.add("show");
+            addHistoryItem({ imageUrl: resultImageUrl, styleName: styleName, timestamp: new Date().toISOString() });
+            setTimeout(() => resultSection.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
         } catch (error) {
-
             console.error(error);
-
-            showStatus(
-                error.message ||
-                "出错了，请重试。"
-            );
-
+            showStatus(error.message || "出错了，请重试。");
         } finally {
-
             loading.classList.remove("show");
-
             updateGenerateButton();
-
         }
-
     });
-
-
-    /* =========================
-       Download
-    ========================= */
 
     downloadButton.addEventListener("click", async () => {
-
-        if (!resultImageUrl) {
-            return;
-        }
-
+        if (!resultImageUrl) return;
         try {
-
             const response = await fetch(resultImageUrl);
-
             const blob = await response.blob();
-
             const url = URL.createObjectURL(blob);
-
             const link = document.createElement("a");
-
             link.href = url;
-
-            link.download =
-                `pixshift-${selectedStyle}.jpg`;
-
+            link.download = `pixshift-${selectedStyle}.jpg`;
             document.body.appendChild(link);
-
             link.click();
-
             link.remove();
-
             URL.revokeObjectURL(url);
-
         } catch (error) {
-
             console.error(error);
-
-            window.open(
-                resultImageUrl,
-                "_blank"
-            );
-
+            window.open(resultImageUrl, "_blank");
         }
-
     });
 
-
-    /* =========================
-       Helpers
-    ========================= */
-
     function showStatus(message) {
-
         status.textContent = message;
-
     }
 
-
     function escapeHtml(value) {
-
         return String(value)
             .replaceAll("&", "&amp;")
             .replaceAll("<", "&lt;")
             .replaceAll(">", "&gt;")
             .replaceAll('"', "&quot;")
             .replaceAll("'", "&#039;");
-
     }
-
 </script>
-
 </body>
 </html>
