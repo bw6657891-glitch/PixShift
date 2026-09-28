@@ -1,181 +1,789 @@
-// dunhuang-render.js （替换原 image-edit.js 或新增）
-// 使用 Node.js 内置 fetch，无需安装依赖
+// image-edit.js
+// PixShift — AI Photo Style Transfer API
+// 使用 Node.js 内置 fetch，无需安装额外依赖
+
 const API_KEY = process.env.DASHSCOPE_API_KEY;
 const BASE_URL = 'https://dashscope.aliyuncs.com/api/v1';
 
-// 敦煌八大风格配置
+
+// ============================================================
+// PixShift 风格配置
+// ============================================================
+
 const STYLE_CONFIGS = {
-    '反弹琵琶': {
+
+    // --------------------------------------------------------
+    // 1. 极简抽象
+    // --------------------------------------------------------
+
+    'photo-abstract-editorial': {
+
+        name: '极简抽象',
+
+        name_en: 'Photo Abstract Editorial',
+
         model: 'qwen-image-edit-max',
-        positive_prompt: '将人物照片转换为敦煌壁画中飞天反弹琵琶的风格。人物保持原貌，四周环绕飞天、飘带飞舞，背景融入敦煌壁画元素，色彩以土红、石绿、金色为主，具有千年壁画质感。',
-        negative_prompt: '低质量，模糊，变形，现代服饰，写实照片，背景杂乱，卡通'
+
+        positive_prompt: `
+Preserve the original photograph faithfully as the primary visual source.
+
+Do not redraw, replace, trace, vectorize, or turn the photograph into
+a generic illustration.
+
+Create a refined editorial photography composition inspired by
+contemporary photography books, art magazines, and museum catalogues.
+
+Keep the original photograph visually recognizable and natural.
+
+Below or around the original photograph, introduce a lower warm ivory
+abstract memory panel derived ONLY from the spatial relationships,
+dominant colors, visual rhythm, silhouettes, negative space, and
+structural geometry found in the original photograph.
+
+The abstract panel should feel like a visual memory extracted from
+the photograph, not a thumbnail, infographic, illustration, or
+decorative collage.
+
+Use restrained asymmetry, generous whitespace, subtle geometric shapes,
+organic fragments, quiet visual rhythm, and sophisticated editorial balance.
+
+All colors used in the abstract panel must be derived from the original
+photograph.
+
+Add exactly one small restrained English title containing 2 to 5 words.
+The typography should be subtle and editorial.
+
+Overall feeling:
+minimalist, sophisticated, quiet, contemporary, photographic,
+high-end editorial design, museum catalogue, photography book.
+
+Do not change the identity or main subject of the original photograph.
+Do not introduce unrelated objects.
+`,
+
+        negative_prompt: `
+generic illustration,
+cartoon,
+vector art,
+infographic,
+poster,
+thumbnail,
+random geometric shapes,
+unrelated colors,
+excessive decoration,
+overly symmetrical layout,
+heavy typography,
+large text,
+multiple titles,
+fantasy elements,
+anime,
+3D rendering,
+low quality,
+blurry face,
+distorted person,
+changed identity,
+duplicate person,
+deformed anatomy
+`
     },
-    '供养人像': {
+
+
+    // --------------------------------------------------------
+    // 2. 中国古画
+    // --------------------------------------------------------
+
+    'classical-painting': {
+
+        name: '中国古画',
+
+        name_en: 'Chinese Classical Painting',
+
         model: 'qwen-image-edit-max',
-        positive_prompt: '将人物转化为晚唐敦煌供养人像风格。身着华丽唐代服饰，手持鲜花，身后呈现原色敦煌壁画，线条细腻，色彩饱满，带有宗教庄严感。',
-        negative_prompt: '低质量，现代服装，表情夸张，背景单调，二次元'
+
+        positive_prompt: `
+Transform the uploaded photograph into an elegant Chinese classical painting.
+
+Preserve the recognizable identity, facial characteristics, pose,
+and main composition of the original subject.
+
+Use the visual language of traditional Chinese painting:
+ink wash, mineral pigments, rice paper texture, elegant brushwork,
+controlled outlines, atmospheric empty space, and poetic composition.
+
+The transformation should feel like a genuine traditional artwork
+rather than a modern digital filter.
+
+For portraits, preserve the person's recognizable face while adapting
+clothing, texture, background, and rendering into the visual language
+of Chinese classical painting.
+
+Use restrained traditional colors such as ink black, warm paper,
+muted mineral green, ochre, muted red, and subtle blue.
+
+The final image should feel historical, quiet, elegant,
+and artistically refined.
+`,
+
+        negative_prompt: `
+photorealistic,
+modern photography,
+anime,
+cartoon,
+digital illustration,
+3D rendering,
+neon colors,
+oversaturated colors,
+Western fantasy,
+modern objects,
+distorted face,
+changed identity,
+deformed hands,
+low quality,
+blurry
+`
     },
-    '千佛光相': {
+
+
+    // --------------------------------------------------------
+    // 3. 美式漫画
+    // --------------------------------------------------------
+
+    'american-comic': {
+
+        name: '美式漫画',
+
+        name_en: 'American Comic',
+
         model: 'qwen-image-edit-max',
-        positive_prompt: '面部居中，四周千佛呈放射状光相排列，融合敦煌千佛洞元素，光线柔和而神圣，人物面部保持清晰，整体如佛光普照。',
-        negative_prompt: '模糊，变形，光线暗淡，不对称，佛像扭曲'
+
+        positive_prompt: `
+Transform the photograph into a sophisticated American comic-book illustration.
+
+Preserve the identity, pose, facial expression, clothing silhouette,
+and major composition of the original photograph.
+
+Use confident ink outlines, graphic shadows, dynamic contrast,
+halftone textures, controlled color blocks, and cinematic comic-book
+lighting.
+
+The result should resemble a professionally illustrated modern
+American comic or graphic novel, not a children's cartoon.
+
+Preserve recognizable facial features and natural anatomy.
+
+Use strong visual hierarchy and graphic composition while keeping
+the original scene recognizable.
+
+The final image should feel like a premium graphic novel panel.
+`,
+
+        negative_prompt: `
+Japanese anime,
+manga,
+chibi,
+children's cartoon,
+cute style,
+3D animation,
+photorealistic,
+watercolor,
+oil painting,
+overly exaggerated anatomy,
+distorted face,
+extra fingers,
+duplicate characters,
+random text,
+speech bubbles,
+low quality
+`
     },
-    '九色鹿缘': {
+
+
+    // --------------------------------------------------------
+    // 4. 油画
+    // --------------------------------------------------------
+
+    'oil-painting': {
+
+        name: '油画',
+
+        name_en: 'Oil Painting',
+
         model: 'qwen-image-edit-max',
-        positive_prompt: '将人物融入九色鹿本生故事场景，背景为赭红山峦，人物化为故事中角色，保留敦煌壁画特有的装饰性风格，色彩鲜艳。',
-        negative_prompt: '低质量，现代元素，动物变形，背景脱离壁画风格'
+
+        positive_prompt: `
+Transform the uploaded photograph into a sophisticated oil painting.
+
+Preserve the original person's identity, pose, facial structure,
+and overall composition.
+
+Use visible painterly brushwork, layered pigments, subtle impasto,
+natural color transitions, and rich surface texture.
+
+The image should look physically painted with oil paint on canvas
+rather than having a simple digital oil-painting filter.
+
+Maintain realistic proportions and recognizable facial features.
+
+Use a restrained, museum-quality palette with nuanced shadows
+and highlights.
+
+The final result should feel like a professionally painted
+portrait or figurative oil painting.
+`,
+
+        negative_prompt: `
+digital filter,
+photographic,
+anime,
+cartoon,
+vector,
+3D render,
+plastic skin,
+over-smoothed face,
+excessive saturation,
+abstract distortion,
+changed identity,
+deformed anatomy,
+blurry,
+low quality
+`
     },
-    '藻井天顶': {
+
+
+    // --------------------------------------------------------
+    // 5. 水彩
+    // --------------------------------------------------------
+
+    'watercolor': {
+
+        name: '水彩',
+
+        name_en: 'Watercolor',
+
         model: 'qwen-image-edit-max',
-        positive_prompt: '头像化为敦煌藻井图案中心，四周铺开联珠纹、莲花纹、卷草纹，对称华丽，色彩以深红、金、绿为主，极具装饰性。',
-        negative_prompt: '不对称，纹样粗糙，人物特征丢失，现代感'
+
+        positive_prompt: `
+Transform the photograph into a refined watercolor painting.
+
+Preserve the original person's identity, pose, composition,
+and major visual features.
+
+Use transparent watercolor layers, natural pigment diffusion,
+soft edges, subtle paper grain, controlled washes,
+and elegant white space.
+
+Allow some areas to dissolve naturally into the paper while
+keeping the main subject recognizable.
+
+The image should feel hand-painted with real watercolor pigments
+on textured paper.
+
+Use delicate, sophisticated colors and avoid excessive digital smoothness.
+
+Overall feeling:
+quiet, airy, artistic, natural, and refined.
+`,
+
+        negative_prompt: `
+digital painting,
+3D,
+anime,
+cartoon,
+photorealistic,
+plastic texture,
+hard vector edges,
+neon colors,
+oversaturation,
+heavy outlines,
+changed identity,
+deformed face,
+blurry,
+low quality
+`
     },
-    '丝路驼影': {
+
+
+    // --------------------------------------------------------
+    // 6. 胶片摄影
+    // --------------------------------------------------------
+
+    'analog-film': {
+
+        name: '胶片摄影',
+
+        name_en: 'Analog Film',
+
         model: 'qwen-image-edit-max',
-        positive_prompt: '人物化为西域商贾形象，头戴胡帽，牵骆驼，背景为沙漠落日与丝路古城，带有敦煌壁画中商旅图的色感与氛围。',
-        negative_prompt: '现代交通工具，表情冷漠，背景城市'
-    },
-    '金刚怒目': {
-        model: 'qwen-image-edit-max',
-        positive_prompt: '人物面部转化为护法金刚风格，棱角分明，身绕火焰纹，表情威严，保留敦煌金刚力士的造型特征，色彩强烈。',
-        negative_prompt: '柔和表情，女性化，火焰模糊，失去人物辨识度'
-    },
-    '斑驳千年': {
-        model: 'qwen-image-edit-max',
-        positive_prompt: '人物半隐于斑驳剥落的壁画墙面中，叠加岁月肌理、裂纹和褪色效果，仿佛已存在千年，保持人物轮廓可辨。',
-        negative_prompt: '高清干净，新壁画感，无纹理，过于清晰'
+
+        positive_prompt: `
+Transform the uploaded photograph into a high-end analog film photograph.
+
+Preserve the original person's identity, pose, composition,
+and environment.
+
+Introduce authentic photographic characteristics associated with
+professional 35mm film photography:
+
+natural film grain,
+subtle halation,
+gentle highlight roll-off,
+organic contrast,
+slightly muted colors,
+nuanced shadows,
+and realistic analog texture.
+
+The image should feel photographed on real film rather than processed
+with an obvious digital filter.
+
+Keep skin tones natural and preserve important details.
+
+Aim for the atmosphere of a carefully scanned professional film
+photograph, with restrained color grading and cinematic depth.
+`,
+
+        negative_prompt: `
+digital HDR,
+oversharpening,
+excessive clarity,
+heavy Instagram filter,
+extreme color grading,
+neon colors,
+artificial skin,
+plastic skin,
+anime,
+cartoon,
+illustration,
+3D render,
+changed identity,
+deformed face,
+low quality,
+blurry
+`
     }
+
 };
 
+
+// ============================================================
+// 获取风格列表
+// ============================================================
+
+function getStyleList() {
+
+    return Object.entries(STYLE_CONFIGS).map(
+        ([id, config]) => ({
+            id: id,
+            name: config.name,
+            name_en: config.name_en
+        })
+    );
+
+}
+
+
+// ============================================================
+// API 主函数
+// ============================================================
+
 module.exports = async (req, res) => {
-    // 设置 CORS 头和内容类型
-    res.setHeader('Content-Type', 'application/json');
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+    // --------------------------------------------------------
+    // CORS
+    // --------------------------------------------------------
+
+    res.setHeader(
+        'Content-Type',
+        'application/json'
+    );
+
+    res.setHeader(
+        'Access-Control-Allow-Origin',
+        '*'
+    );
+
+    res.setHeader(
+        'Access-Control-Allow-Methods',
+        'GET, POST, OPTIONS'
+    );
+
+    res.setHeader(
+        'Access-Control-Allow-Headers',
+        'Content-Type, Authorization'
+    );
+
+
+    // --------------------------------------------------------
+    // OPTIONS
+    // --------------------------------------------------------
 
     if (req.method === 'OPTIONS') {
+
         return res.status(200).end();
+
     }
+
+
+    // --------------------------------------------------------
+    // 检查 API Key
+    // --------------------------------------------------------
 
     if (!API_KEY) {
+
         return res.status(500).json({
+
             success: false,
-            error: 'API 密钥未配置，请联系管理员设置环境变量 DASHSCOPE_API_KEY'
+
+            error:
+                'API 密钥未配置，请联系管理员设置环境变量 DASHSCOPE_API_KEY'
+
         });
+
     }
+
+
+    // ========================================================
+    // GET：返回 API 信息和可用风格
+    // ========================================================
 
     if (req.method === 'GET') {
+
         return res.status(200).json({
+
             success: true,
-            endpoint: '敦煌幻境 AI 飞天照相馆 API',
-            method: 'POST',
-            description: '上传人像图片并选择敦煌风格进行AI融合',
-            availableStyles: Object.keys(STYLE_CONFIGS),
+
+            endpoint:
+                'PixShift AI Photo Style Transfer API',
+
+            method:
+                'POST',
+
+            description:
+                '上传照片并选择视觉风格，通过 AI 生成风格化图片',
+
+            availableStyles:
+                getStyleList(),
+
             parameters: {
-                style_name: 'string (required) - 风格名称（见availableStyles）',
-                image_base64: 'string (required) - base64编码的图片数据'
+
+                style_id:
+                    'string (required) - 风格 ID',
+
+                image_base64:
+                    'string (required) - base64 编码的图片数据'
+
             }
+
         });
+
     }
+
+
+    // ========================================================
+    // POST：处理图片
+    // ========================================================
 
     if (req.method === 'POST') {
+
         try {
-            const { style_name, image_base64 } = req.body;
 
-            if (!style_name || !image_base64) {
+            const {
+                style_id,
+                image_base64
+            } = req.body;
+
+
+            // ------------------------------------------------
+            // 参数检查
+            // ------------------------------------------------
+
+            if (!style_id || !image_base64) {
+
                 return res.status(400).json({
+
                     success: false,
-                    error: '缺少必要参数: style_name 和 image_base64'
+
+                    error:
+                        '缺少必要参数: style_id 和 image_base64'
+
                 });
+
             }
 
-            if (!STYLE_CONFIGS[style_name]) {
+
+            // ------------------------------------------------
+            // 检查风格是否存在
+            // ------------------------------------------------
+
+            if (!STYLE_CONFIGS[style_id]) {
+
                 return res.status(400).json({
+
                     success: false,
-                    error: `不支持的风格: ${style_name}`,
-                    available_styles: Object.keys(STYLE_CONFIGS)
+
+                    error:
+                        `不支持的风格: ${style_id}`,
+
+                    available_styles:
+                        getStyleList()
+
                 });
+
             }
 
-            const styleConfig = STYLE_CONFIGS[style_name];
 
-            // 确保 base64 格式正确
-            let imageData = image_base64;
-            if (!image_base64.startsWith('data:image/')) {
-                imageData = `data:image/jpeg;base64,${image_base64}`;
+            const styleConfig =
+                STYLE_CONFIGS[style_id];
+
+
+            // ------------------------------------------------
+            // 确保图片 Base64 格式正确
+            // ------------------------------------------------
+
+            let imageData =
+                image_base64;
+
+
+            if (
+                !image_base64.startsWith('data:image/')
+            ) {
+
+                imageData =
+                    `data:image/jpeg;base64,${image_base64}`;
+
             }
+
+
+            // =================================================
+            // 构造 DashScope 请求
+            // =================================================
 
             const requestBody = {
-                model: styleConfig.model,
+
+                model:
+                    styleConfig.model,
+
                 input: {
+
                     messages: [
+
                         {
-                            role: 'user',
+
+                            role:
+                                'user',
+
                             content: [
-                                { image: imageData },
-                                { text: styleConfig.positive_prompt }
+
+                                {
+                                    image:
+                                        imageData
+                                },
+
+                                {
+                                    text:
+                                        styleConfig.positive_prompt
+                                }
+
                             ]
+
                         }
+
                     ]
+
                 },
+
                 parameters: {
-                    n: 1,
-                    negative_prompt: styleConfig.negative_prompt,
-                    size: '1024*1024',
-                    prompt_extend: true,
-                    watermark: false
+
+                    n:
+                        1,
+
+                    negative_prompt:
+                        styleConfig.negative_prompt,
+
+                    size:
+                        '1024*1024',
+
+                    prompt_extend:
+                        true,
+
+                    watermark:
+                        false
+
                 }
+
             };
 
-            // 调用阿里云 API
-            const response = await fetch(`${BASE_URL}/services/aigc/multimodal-generation/generation`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${API_KEY}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(requestBody),
-                signal: AbortSignal.timeout(60000)
-            });
 
-            const data = await response.json();
+            // =================================================
+            // 调用阿里云 DashScope
+            // =================================================
+
+            const response = await fetch(
+
+                `${BASE_URL}/services/aigc/multimodal-generation/generation`,
+
+                {
+
+                    method:
+                        'POST',
+
+                    headers: {
+
+                        'Authorization':
+                            `Bearer ${API_KEY}`,
+
+                        'Content-Type':
+                            'application/json'
+
+                    },
+
+                    body:
+                        JSON.stringify(requestBody),
+
+                    signal:
+                        AbortSignal.timeout(60000)
+
+                }
+
+            );
+
+
+            // ------------------------------------------------
+            // 读取 API 返回
+            // ------------------------------------------------
+
+            const data =
+                await response.json();
+
+
+            // ------------------------------------------------
+            // API 错误
+            // ------------------------------------------------
 
             if (!response.ok) {
-                throw new Error(data.message || `阿里云API返回错误: ${response.status}`);
+
+                throw new Error(
+
+                    data.message ||
+                    data.error ||
+                    `阿里云API返回错误: ${response.status}`
+
+                );
+
             }
 
-            const content = data?.output?.choices?.[0]?.message?.content;
-            let imageUrl = null;
+
+            // =================================================
+            // 提取生成图片 URL
+            // =================================================
+
+            const content =
+                data?.output?.choices?.[0]?.message?.content;
+
+
+            let imageUrl =
+                null;
+
 
             if (Array.isArray(content)) {
+
                 for (const item of content) {
+
                     if (item.image) {
-                        imageUrl = typeof item.image === 'string' ? item.image : item.image.url;
+
+                        imageUrl =
+                            typeof item.image === 'string'
+                                ? item.image
+                                : item.image.url;
+
                         break;
+
                     }
+
                 }
+
             }
+
+
+            // ------------------------------------------------
+            // 没有找到图片
+            // ------------------------------------------------
 
             if (!imageUrl) {
-                throw new Error('未找到生成的图片URL');
+
+                throw new Error(
+                    '未找到生成的图片 URL'
+                );
+
             }
 
+
+            // =================================================
+            // 返回成功结果
+            // =================================================
+
             return res.status(200).json({
-                success: true,
-                imageUrl: imageUrl,
-                style: style_name,
-                request_id: data.request_id
+
+                success:
+                    true,
+
+                imageUrl:
+                    imageUrl,
+
+                style_id:
+                    style_id,
+
+                style_name:
+                    styleConfig.name,
+
+                style_name_en:
+                    styleConfig.name_en,
+
+                request_id:
+                    data.request_id
+
             });
+
 
         } catch (error) {
-            console.error('API调用错误:', error.message);
+
+            // ------------------------------------------------
+            // 错误处理
+            // ------------------------------------------------
+
+            console.error(
+                'PixShift API调用错误:',
+                error.message
+            );
+
+
             return res.status(500).json({
-                success: false,
-                error: error.message || '图像处理失败'
+
+                success:
+                    false,
+
+                error:
+                    error.message ||
+                    '图像处理失败'
+
             });
+
         }
+
     }
 
-    return res.status(405).json({ success: false, error: 'Method not allowed' });
+
+    // ========================================================
+    // 其他 HTTP 方法
+    // ========================================================
+
+    return res.status(405).json({
+
+        success:
+            false,
+
+        error:
+            'Method not allowed'
+
+    });
+
 };
