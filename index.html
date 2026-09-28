@@ -3,609 +3,1928 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>敦煌幻境 · Dunhuang Lens — AI 飞天照相馆</title>
-    <script src="https://cdn.tailwindcss.com">
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <title>PixShift · 智谱智绘AI工作室</title>
+    <meta
+        name="description"
+        content="PixShift——智谱智绘，记录无限可能。"
+    >
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
     <style>
         :root {
-            --dunhuang-bg: #fdf6ed;
-            --dunhuang-red: #b34d4a;
-            --dunhuang-green: #4a7c59;
-            --dunhuang-gold: #c9a84c;
-            --dunhuang-dark: #2c2c2c;
-            --dunhuang-red-light: #fdf3f0;
-            --dunhuang-gold-light: #fdf9ed;
+            --bg: #f6f6f3;
+            --surface: #ffffff;
+            --surface-soft: #eeeeeb;
+            --text: #151515;
+            --text-secondary: #70706c;
+            --border: #e3e3df;
+            --border-dark: #cfcfca;
+            --radius: 18px;
+            --radius-small: 12px;
+            --max-width: 1180px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
-            font-family: 'Inter', 'Noto Serif SC', 'Source Han Serif CN', system-ui, -apple-system, sans-serif;
-            background-color: #fefdf9;
-            color: #2c2c2c;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family:
+                "Inter",
+                "Noto Sans SC",
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+            line-height: 1.6;
         }
 
-        /* 敦煌风格卡片选中态 */
-        .style-card {
-            transition: all 0.3s ease;
-            border-color: #e5d5c8;
-            background-color: #fffefb;
+        button,
+        input {
+            font: inherit;
+        }
+
+        button {
             cursor: pointer;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* =========================
+           Navigation
+        ========================= */
+
+        .nav {
+            width: 100%;
+            border-bottom: 1px solid var(--border);
+            background: rgba(246, 246, 243, 0.88);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .nav-inner {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            height: 72px;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+
+        .logo-mark {
+            width: 28px;
+            height: 28px;
+            border: 2px solid var(--text);
+            border-radius: 8px;
             position: relative;
             overflow: hidden;
         }
-        .style-card:hover {
-            border-color: #c9a84c;
-            background-color: #fdf9ed;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(179, 77, 74, 0.08);
-        }
-        .style-card.active {
-            border-color: #b34d4a !important;
-            background-color: #fdf3f0 !important;
-            box-shadow: 0 4px 16px rgba(179, 77, 74, 0.12);
-            transform: translateY(-1px);
-        }
-        .style-card.active::before {
-            content: '';
+
+        .logo-mark::after {
+            content: "";
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(to right, #b34d4a, #c9a84c);
-            border-radius: 0 0 2px 2px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--text);
+            top: -6px;
+            right: -6px;
         }
 
-        /* Hero 渐变背景 */
-        .hero-gradient {
-            background: radial-gradient(ellipse at 30% 25%, rgba(201, 168, 76, 0.08) 0%, rgba(253, 246, 237, 0.6) 40%, #fefdf9 70%),
-                radial-gradient(ellipse at 70% 60%, rgba(179, 77, 74, 0.04) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 80%, rgba(74, 124, 89, 0.03) 0%, transparent 45%);
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            color: var(--text-secondary);
+            font-size: 14px;
         }
 
-        /* 装饰性元素 */
-        .deco-circle-dunhuang {
+        .nav-links a {
+            transition: color .2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+        }
+
+        /* =========================
+           Hero
+        ========================= */
+
+        .hero {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 100px 24px 90px;
+            display: grid;
+            grid-template-columns: 1.2fr .8fr;
+            gap: 80px;
+            align-items: end;
+        }
+
+        .hero-kicker {
+            margin-bottom: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+        }
+
+        .hero-title {
+            margin: 0;
+            max-width: 760px;
+            font-size: clamp(48px, 7vw, 88px);
+            line-height: .98;
+            letter-spacing: -.055em;
+            font-weight: 600;
+        }
+
+        .hero-title span {
+            color: var(--text-secondary);
+        }
+
+        .hero-description {
+            margin: 28px 0 0;
+            max-width: 520px;
+            color: var(--text-secondary);
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .hero-side {
+            border-left: 1px solid var(--border-dark);
+            padding-left: 28px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .hero-side strong {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text);
+            font-size: 15px;
+        }
+
+        /* =========================
+           Section
+        ========================= */
+
+        .section {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 24px 100px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section-number {
+            color: var(--text-secondary);
+            font-size: 12px;
+            letter-spacing: .12em;
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            margin: 0;
+            font-size: 30px;
+            line-height: 1.2;
+            letter-spacing: -.035em;
+        }
+
+        .section-description {
+            margin: 0;
+            max-width: 420px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* =========================
+           Studio
+        ========================= */
+
+        .studio {
+            display: grid;
+            grid-template-columns: .9fr 1.1fr;
+            gap: 20px;
+        }
+
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+        }
+
+        .panel-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .panel-label strong {
+            font-size: 15px;
+        }
+
+        .panel-label span {
+            color: var(--text-secondary);
+            font-size: 12px;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+
+        /* Upload */
+
+        .upload-area {
+            min-height: 430px;
+            border: 1px dashed var(--border-dark);
+            border-radius: 14px;
+            background: #fafaf8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 30px;
+            transition:
+                border-color .2s ease,
+                background .2s ease;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .upload-area.dragover {
+            border-color: var(--text);
+            background: #f0f0ed;
+        }
+
+        .upload-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .upload-icon {
+            width: 52px;
+            height: 52px;
+            border: 1px solid var(--border-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 18px;
+            font-size: 20px;
+        }
+
+        .upload-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .upload-subtitle {
+            margin-top: 6px;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .upload-button {
+            margin-top: 22px;
+            padding: 11px 20px;
+            border: 1px solid var(--text);
+            border-radius: 999px;
+            background: var(--text);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 500;
+            transition: opacity .2s ease;
+        }
+
+        .upload-button:hover {
+            opacity: .8;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 100%;
+            min-height: 380px;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        .preview-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 14px;
+            gap: 10px;
+        }
+
+        .text-button {
+            border: 0;
+            background: none;
+            padding: 5px 0;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .text-button:hover {
+            color: var(--text);
+        }
+
+        /* =========================
+           Style Cards
+        ========================= */
+
+        .style-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .style-card {
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            background: var(--surface);
+            text-align: left;
+            padding: 0;
+            transition:
+                transform .2s ease,
+                border-color .2s ease,
+                box-shadow .2s ease;
+        }
+
+        .style-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--border-dark);
+        }
+
+        .style-card.selected {
+            border-color: var(--text);
+            box-shadow: 0 0 0 1px var(--text);
+        }
+
+        .style-preview {
+            height: 125px;
+            position: relative;
+            overflow: hidden;
+            background: #e9e9e5;
+        }
+
+        .style-preview::before,
+        .style-preview::after {
+            content: "";
             position: absolute;
             border-radius: 50%;
-            z-index: 0;
-            pointer-events: none;
         }
-        .deco-line-dunhuang {
+
+        /* 示例图片覆盖层 */
+        .style-preview-img {
             position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+
+        /* 六种风格的抽象预览（后备） */
+
+        .preview-abstract {
+            background:
+                linear-gradient(135deg, #eee9df 0 40%, #d2c6b5 40% 65%, #f7f3eb 65%);
+        }
+
+        .preview-abstract::before {
+            width: 90px;
+            height: 35px;
+            background: #6f6b62;
+            left: 22px;
+            top: 28px;
+            transform: rotate(-12deg);
+        }
+
+        .preview-abstract::after {
+            width: 55px;
+            height: 55px;
+            background: #b4a999;
+            right: 22px;
+            bottom: 15px;
+        }
+
+        .preview-classical {
+            background:
+                linear-gradient(120deg, #d8c9a9, #b89e71);
+        }
+
+        .preview-classical::before {
+            width: 95px;
+            height: 95px;
+            border: 10px solid rgba(73, 75, 53, .55);
+            left: 30px;
+            top: 18px;
+            transform: rotate(25deg);
+        }
+
+        .preview-classical::after {
+            width: 70px;
+            height: 10px;
+            background: rgba(93, 55, 39, .55);
+            right: 20px;
+            bottom: 25px;
+            transform: rotate(-20deg);
+        }
+
+        .preview-comic {
+            background: #eee;
+        }
+
+        .preview-comic::before {
+            width: 100px;
+            height: 100px;
+            background:
+                radial-gradient(circle, #222 0 3px, transparent 4px);
+            background-size: 12px 12px;
+            left: 20px;
+            top: 12px;
+        }
+
+        .preview-comic::after {
+            width: 110px;
+            height: 8px;
+            background: #111;
+            right: 15px;
+            bottom: 25px;
+            transform: rotate(-25deg);
+        }
+
+        .preview-oil {
+            background:
+                linear-gradient(135deg, #aaa 0 20%, #888 20% 35%, #c0b5a1 35% 55%, #777 55% 75%, #b7aa91 75%);
+        }
+
+        .preview-oil::before {
+            width: 120px;
+            height: 55px;
+            background: rgba(40, 40, 40, .45);
+            left: 20px;
+            top: 30px;
+            transform: rotate(18deg);
+            filter: blur(2px);
+        }
+
+        .preview-oil::after {
+            width: 80px;
+            height: 80px;
+            background: rgba(240, 235, 220, .35);
+            right: 15px;
+            bottom: -20px;
+        }
+
+        .preview-watercolor {
+            background:
+                linear-gradient(140deg, #d9e1dd, #c8d3db 45%, #e4d9c9);
+        }
+
+        .preview-watercolor::before {
+            width: 125px;
+            height: 80px;
+            background: rgba(72, 91, 101, .35);
+            left: 18px;
+            top: 22px;
+            border-radius: 45% 55% 35% 65%;
+            filter: blur(5px);
+        }
+
+        .preview-watercolor::after {
+            width: 60px;
+            height: 60px;
+            background: rgba(160, 105, 85, .35);
+            right: 25px;
+            bottom: 5px;
+            filter: blur(5px);
+        }
+
+        .preview-film {
+            background:
+                linear-gradient(135deg, #7d776d, #b0a18c);
+        }
+
+        .preview-film::before {
+            width: 120px;
+            height: 100px;
+            border: 1px solid rgba(255,255,255,.45);
+            left: 30px;
+            top: 12px;
+        }
+
+        .preview-film::after {
+            width: 100%;
             height: 1px;
-            z-index: 0;
-            pointer-events: none;
+            background: rgba(255,255,255,.35);
+            left: 0;
+            top: 50%;
         }
 
-        /* 上传区域 */
-        .upload-area {
-            transition: all 0.3s ease;
-            border-color: #e5d5c8;
-            background-color: #fffefb;
-        }
-        .upload-area:hover {
-            border-color: #c9a84c;
-            background: #fdf9ed;
-            box-shadow: 0 4px 20px rgba(179, 77, 74, 0.06);
+        .style-content {
+            padding: 14px 15px 16px;
         }
 
-        /* 结果框 */
-        .result-frame {
-            box-shadow: 0 25px 50px -12px rgba(44, 28, 20, 0.2);
-            border-color: #e5d5c8;
-            background: #fffefb;
-            border-radius: 1.5rem;
+        .style-name {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 10px;
         }
 
-        /* 作品展示卡片 */
-        .gallery-card:hover .gallery-overlay {
-            opacity: 1;
-        }
-        .gallery-card {
-            border-color: #e5d5c8;
-            transition: all 0.4s ease;
-        }
-        .gallery-card:hover {
-            box-shadow: 0 16px 40px rgba(179, 77, 74, 0.12);
-            transform: translateY(-4px);
+        .style-name-cn {
+            font-size: 14px;
+            font-weight: 600;
         }
 
-        /* 飘带动画 (仅用于背景装饰) */
-        @keyframes ribbonFloat {
-            0%,
-            100% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 0.35;
-            }
-            25% {
-                transform: translateY(-18px) rotate(3deg);
-                opacity: 0.55;
-            }
-            50% {
-                transform: translateY(-8px) rotate(-2deg);
-                opacity: 0.4;
-            }
-            75% {
-                transform: translateY(-22px) rotate(1deg);
-                opacity: 0.5;
-            }
-        }
-        @keyframes ribbonFloat2 {
-            0%,
-            100% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 0.3;
-            }
-            30% {
-                transform: translateY(-14px) rotate(-3deg);
-                opacity: 0.5;
-            }
-            60% {
-                transform: translateY(-6px) rotate(2deg);
-                opacity: 0.38;
-            }
-            85% {
-                transform: translateY(-20px) rotate(-1deg);
-                opacity: 0.48;
-            }
-        }
-        .ribbon-animate {
-            animation: ribbonFloat 8s ease-in-out infinite;
-        }
-        .ribbon-animate2 {
-            animation: ribbonFloat2 10s ease-in-out infinite;
+        .style-name-en {
+            color: var(--text-secondary);
+            font-size: 10px;
+            letter-spacing: .05em;
+            white-space: nowrap;
         }
 
-        /* 藻井纹样背景 */
-        .ceiling-pattern {
-            background-image:
-                radial-gradient(circle at 50% 50%, rgba(201, 168, 76, 0.04) 0%, transparent 60%),
-                radial-gradient(circle at 50% 50%, rgba(179, 77, 74, 0.03) 0%, transparent 35%),
-                radial-gradient(circle at 50% 50%, rgba(74, 124, 89, 0.02) 0%, transparent 25%);
-            background-size: 200px 200px, 140px 140px, 90px 90px;
-            background-position: 0 0, 30px 30px, 55px 55px;
-            background-repeat: repeat;
+        .style-description {
+            margin: 7px 0 0;
+            color: var(--text-secondary);
+            font-size: 11px;
+            line-height: 1.6;
         }
 
-        /* 响应式调整 */
-        @media (max-width: 768px) {
-            .hero-gradient {
-                background: radial-gradient(ellipse at 40% 20%, rgba(201, 168, 76, 0.06) 0%, #fefdf9 60%);
+        /* =========================
+           Generate
+        ========================= */
+
+        .generate-area {
+            margin-top: 20px;
+        }
+
+        .generate-button {
+            width: 100%;
+            height: 58px;
+            border: 0;
+            border-radius: 14px;
+            background: var(--text);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: .01em;
+            transition:
+                opacity .2s ease,
+                transform .2s ease;
+        }
+
+        .generate-button:hover:not(:disabled) {
+            opacity: .85;
+            transform: translateY(-1px);
+        }
+
+        .generate-button:disabled {
+            cursor: not-allowed;
+            opacity: .35;
+        }
+
+        .status {
+            margin-top: 12px;
+            min-height: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        /* =========================
+           Result
+        ========================= */
+
+        .result-section {
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+        }
+
+        .result-container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+        }
+
+        .result-image-wrap {
+            background: #eeeeeb;
+            border-radius: 14px;
+            overflow: hidden;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .result-image {
+            width: 100%;
+            max-height: 720px;
+            object-fit: contain;
+        }
+
+        .result-footer {
+            margin-top: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .result-info {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .result-info strong {
+            color: var(--text);
+        }
+
+        .download-button {
+            padding: 11px 20px;
+            border: 1px solid var(--text);
+            border-radius: 999px;
+            background: var(--text);
+            color: white;
+            font-size: 13px;
+        }
+
+        /* =========================
+           History
+        ========================= */
+
+        .history-toolbar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 14px;
+        }
+
+        .history-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 14px;
+        }
+
+        .history-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform .2s ease, border-color .2s ease;
+        }
+
+        .history-item:hover {
+            transform: translateY(-2px);
+            border-color: var(--border-dark);
+        }
+
+        .history-item img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .history-item-info {
+            padding: 10px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .history-item-style {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .history-item-date {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        /* =========================
+           Philosophy
+        ========================= */
+
+        .statement {
+            padding: 110px 0 120px;
+            border-top: 1px solid var(--border);
+        }
+
+        .statement-inner {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .statement-text {
+            max-width: 820px;
+            font-size: clamp(28px, 4vw, 52px);
+            line-height: 1.2;
+            letter-spacing: -.04em;
+        }
+
+        .statement-text span {
+            color: var(--text-secondary);
+        }
+
+        /* =========================
+           Footer
+        ========================= */
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 28px 24px;
+        }
+
+        .footer-inner {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        /* =========================
+           Loading
+        ========================= */
+
+        .loading {
+            position: fixed;
+            inset: 0;
+            background: rgba(246, 246, 243, .88);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .loading.show {
+            display: flex;
+        }
+
+        .loading-box {
+            text-align: center;
+        }
+
+        .loading-dot {
+            width: 38px;
+            height: 38px;
+            border: 2px solid var(--border-dark);
+            border-top-color: var(--text);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 18px;
+        }
+
+        .loading-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
             }
-            .result-frame {
-                box-shadow: 0 15px 30px -8px rgba(44, 28, 20, 0.15);
+        }
+
+        /* =========================
+           Responsive
+        ========================= */
+
+        @media (max-width: 850px) {
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 35px;
+                padding-top: 70px;
+            }
+
+            .hero-side {
+                border-left: 0;
+                border-top: 1px solid var(--border-dark);
+                padding-left: 0;
+                padding-top: 20px;
+            }
+
+            .studio {
+                grid-template-columns: 1fr;
+            }
+
+            .upload-area {
+                min-height: 330px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .nav-inner {
+                height: 62px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 60px 20px 70px;
+            }
+
+            .section {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            .style-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .style-preview {
+                height: 150px;
+            }
+
+            .result-footer {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .download-button {
+                text-align: center;
+            }
+
+            .history-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .footer-inner {
+                padding: 0;
+                flex-direction: column;
+                gap: 8px;
             }
         }
     </style>
 </head>
-<body class="antialiased relative min-h-screen">
 
-    <!-- 装饰性背景元素 -->
-    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div class="ceiling-pattern absolute inset-0 opacity-40"></div>
-        <div class="deco-circle-dunhuang w-80 h-80 top-16 -left-24 opacity-15" style="background:rgba(201,168,76,0.08);"></div>
-        <div class="deco-circle-dunhuang w-56 h-56 bottom-32 right-16 opacity-12" style="background:rgba(179,77,74,0.06);"></div>
-        <div class="deco-circle-dunhuang w-40 h-40 top-[45%] right-[8%] opacity-10" style="background:rgba(74,124,89,0.05);"></div>
-        <div class="deco-line-dunhuang w-full top-[28%] left-0 opacity-30" style="background:linear-gradient(to right, transparent, #d5c8b8, transparent);"></div>
-        <div class="deco-line-dunhuang w-3/4 top-[65%] left-[12%] opacity-20" style="background:linear-gradient(to right, transparent, #c9a84c55, transparent);"></div>
+<body>
+
+<!-- =========================
+     Navigation
+========================= -->
+
+<nav class="nav">
+    <div class="nav-inner">
+
+        <a href="#" class="logo">
+            <span class="logo-mark"></span>
+            <span>PixShift</span>
+        </a>
+
+        <div class="nav-links">
+            <a href="#studio">智谱工坊</a>
+            <a href="#styles">AI-Style</a>
+            <a href="#history">历史记录</a>
+            <a href="#about">关于</a>
+        </div>
+
+    </div>
+</nav>
+
+
+<!-- =========================
+     Hero
+========================= -->
+
+<header class="hero">
+
+    <div>
+        <div class="hero-kicker">
+            AI 智谱智绘工作室
+        </div>
+
+        <h1 class="hero-title">
+            Pixshift<br>
+            <span>记录世界。</span>
+        </h1>
+
+        <p class="hero-description">
+            PixShift 将普通照片通过 AI 转换为不同的视觉表达——
+            从中国古画、油画质感，到漫画、胶片与抽象编辑设计。
+        </p>
     </div>
 
-    <!-- 导航栏 -->
-    <nav class="sticky top-0 bg-white/75 backdrop-blur-lg border-b z-50" style="border-color:#f0e8dd;">
-        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-            <a href="#" class="text-xl font-bold tracking-tight" style="color:#2c2c2c;">
-                敦煌幻境 <span class="font-normal text-sm hidden sm:inline" style="color:#9b8c7c;">| Dunhuang Lens</span>
-            </a>
-            <div class="space-x-6 text-sm font-medium">
-                <a href="#tool" class="transition hover:underline underline-offset-4" style="color:#7a6a5c;">AI 渲染</a>
-                <a href="#gallery" class="transition hover:underline underline-offset-4" style="color:#7a6a5c;">作品展示</a>
-            </div>
-        </div>
-    </nav>
+    <div class="hero-side">
+        <strong>记录无限可能。</strong>
+        上传照片，选择一种视觉语言，
+        让 AI 重新诠释另一种生活。
+    </div>
 
-    <!-- Hero -->
-    <section class="relative hero-gradient overflow-hidden">
-        <!-- 飞天飘带装饰 (仅视觉) -->
-        <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-            <svg class="absolute top-[10%] right-[5%] w-64 h-80 ribbon-animate opacity-25 hidden lg:block" viewBox="0 0 200 260" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M160 20 C140 50, 170 90, 130 120 C90 150, 60 110, 40 140 C20 170, 50 200, 30 230" stroke="#b34d4a" stroke-width="2.5" fill="none" opacity="0.5" stroke-linecap="round"/>
-                <path d="M170 15 C150 48, 178 85, 140 115 C100 148, 68 108, 48 135 C28 162, 55 195, 35 228" stroke="#c9a84c" stroke-width="1.8" fill="none" opacity="0.4" stroke-linecap="round"/>
-                <path d="M150 30 C135 55, 160 88, 125 118" stroke="#4a7c59" stroke-width="1.5" fill="none" opacity="0.35" stroke-linecap="round"/>
-            </svg>
-            <svg class="absolute bottom-[8%] left-[3%] w-52 h-64 ribbon-animate2 opacity-20 hidden lg:block" viewBox="0 0 160 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20 180 C35 150, 15 115, 50 85 C85 55, 100 95, 125 65 C145 40, 120 15, 140 5" stroke="#c9a84c" stroke-width="2" fill="none" opacity="0.45" stroke-linecap="round"/>
-                <path d="M15 185 C28 152, 10 118, 45 88" stroke="#b34d4a" stroke-width="1.6" fill="none" opacity="0.35" stroke-linecap="round"/>
-            </svg>
+</header>
+
+
+<!-- =========================
+     Studio
+========================= -->
+
+<section class="section" id="studio">
+
+    <div class="section-header">
+
+        <div>
+            <div class="section-number">01 / 智谱工坊</div>
+            <h2 class="section-title">Create你的图像</h2>
         </div>
 
-        <div class="max-w-5xl mx-auto px-6 py-28 text-center relative z-10">
-            <span class="inline-block px-5 py-1.5 mb-6 text-xs font-semibold tracking-widest uppercase rounded-full" style="background-color:#fdf3f0;color:#b34d4a;border:1px solid #f0d8d4;">
-                AI Powered · Dunhuang Mural Fusion
-            </span>
-            <h1 class="text-5xl md:text-7xl font-bold tracking-tight leading-tight" style="color:#2c2c2c;">
-                你的照片<br>穿越千年敦煌
-            </h1>
-            <p class="mt-6 text-lg max-w-2xl mx-auto" style="color:#8b7a6a;">
-                AI 毫秒级融合，化身壁画中人 · 飞天环绕，丝路千年
-            </p>
-            <div class="mt-12 flex justify-center gap-4 flex-wrap">
-                <a href="#tool" class="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-sm font-semibold text-white transition shadow-lg hover:shadow-xl" style="background-color:#b34d4a;box-shadow:0 8px 24px rgba(179,77,74,0.25);">
-                    开始创作
-                </a>
-                <a href="#gallery" class="inline-flex items-center gap-2 px-8 py-3.5 border rounded-full text-sm font-semibold transition hover:shadow-md" style="border-color:#d5c8b8;color:#7a6a5c;background:#fffefb;">
-                    查看作品
-                </a>
-            </div>
-        </div>
-    </section>
+        <p class="section-description">
+            上传照片并选择视觉风格。
+            PixShift 将为您创建新的图像
+        </p>
 
-    <!-- 三步引导 -->
-    <section class="max-w-4xl mx-auto px-6 py-20 relative z-10">
-        <h2 class="text-2xl font-bold text-center mb-12" style="color:#2c2c2c;">三步，穿越敦煌壁画</h2>
-        <div class="grid md:grid-cols-3 gap-8">
-            <div class="text-center p-6 rounded-2xl transition hover:shadow-md" style="background:#fffefb;border:1px solid #f0e8dd;">
-                <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold" style="background-color:#fdf3f0;color:#b34d4a;">1</div>
-                <h3 class="font-semibold mb-2" style="color:#2c2c2c;">上传原图</h3>
-                <p class="text-sm" style="color:#9b8c7c;">拖拽或点击上传，支持JPG/PNG，最大10MB</p>
-            </div>
-            <div class="text-center p-6 rounded-2xl transition hover:shadow-md" style="background:#fffefb;border:1px solid #f0e8dd;">
-                <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold" style="background-color:#fdf9ed;color:#c9a84c;">2</div>
-                <h3 class="font-semibold mb-2" style="color:#2c2c2c;">选择敦煌风格</h3>
-                <p class="text-sm" style="color:#9b8c7c;">八大飞天主题，反弹琵琶、九色鹿缘任你挑选</p>
-            </div>
-            <div class="text-center p-6 rounded-2xl transition hover:shadow-md" style="background:#fffefb;border:1px solid #f0e8dd;">
-                <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold" style="background-color:#f0f5f2;color:#4a7c59;">3</div>
-                <h3 class="font-semibold mb-2" style="color:#2c2c2c;">下载专属大片</h3>
-                <p class="text-sm" style="color:#9b8c7c;">AI渲染完成，一键保存高清专属照片</p>
-            </div>
-        </div>
-    </section>
+    </div>
 
-    <!-- AI P图工具区 -->
-    <section id="tool" class="max-w-6xl mx-auto px-6 py-16 relative z-10" style="border-top:1px solid #f0e8dd;">
-        <h2 class="text-3xl font-bold mb-2 text-center" style="color:#2c2c2c;">敦煌风格转换</h2>
-        <p class="text-center mb-12" style="color:#9b8c7c;">上传人像，选择风格，一键生成壁画大片</p>
-        <div class="grid lg:grid-cols-2 gap-10 items-start">
-            <!-- 左侧操作区 -->
-            <div class="space-y-7">
-                <!-- 上传 -->
-                <div>
-                    <label class="block text-sm font-medium mb-3" style="color:#8b7a6a;">上传人像照片</label>
-                    <div id="dropzone" class="upload-area relative border-2 border-dashed rounded-2xl p-10 text-center cursor-pointer" style="background:#fffefb;">
-                        <input type="file" id="upload-input" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer z-10">
-                        <div id="upload-placeholder">
-                            <p class="text-sm font-medium" style="color:#b0a090;">点击或拖拽上传照片</p>
-                            <p class="text-xs mt-1" style="color:#ccc0b0;">JPG / PNG / WEBP，最大10MB</p>
-                        </div>
-                        <div id="upload-preview" class="hidden">
-                            <img id="preview-img" src="" alt="预览" class="max-h-48 mx-auto rounded-lg shadow-md">
-                        </div>
+
+    <div class="studio">
+
+        <!-- Upload -->
+
+        <div class="panel">
+
+            <div class="panel-label">
+                <strong>原图</strong>
+                <span>01</span>
+            </div>
+
+            <div
+                class="upload-area"
+                id="uploadArea"
+            >
+
+                <div
+                    class="upload-empty"
+                    id="uploadEmpty"
+                >
+
+                    <div class="upload-icon">＋</div>
+
+                    <div class="upload-title">
+                        上传一张图片
                     </div>
-                </div>
 
-                <!-- 风格选择 -->
-                <div>
-                    <label class="block text-sm font-medium mb-3" style="color:#8b7a6a;">选择敦煌风格（8种）</label>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-                        <button class="style-card flex flex-col items-center justify-center gap-1 p-3.5 border rounded-xl text-xs font-medium transition bg-white" data-style="反弹琵琶">
-                            <span class="font-semibold text-sm" style="color:#2c2c2c;">反弹琵琶</span>
-                            <span class="text-[10px] leading-tight text-center" style="color:#9b8c7c;">飞天环绕·飘带飞舞</span>
-                        </button>
-                        <button class="style-card flex flex-col items-center justify-center gap-1 p-3.5 border rounded-xl text-xs font-medium transition bg-white" data-style="供养人像">
-                            <span class="font-semibold text-sm" style="color:#2c2c2c;">供养人像</span>
-                            <span class="text-[10px] leading-tight text-center" style="color:#9b8c7c;">晚唐华服·壁画原色</span>
-                        </button>
-                        <button class="style-card flex flex-col items-center justify-center gap-1 p-3.5 border rounded-xl text-xs font-medium transition bg-white" data-style="千佛光相">
-                            <span class="font-semibold text-sm" style="color:#2c2c2c;">千佛光相</span>
-                            <span class="text-[10px] leading-tight text-center" style="color:#9b8c7c;">放射状光相·庄严</span>
-                        </button>
-                        <button class="style-card flex flex-col items-center justify-center gap-1 p-3.5 border rounded-xl text-xs font-medium transition bg-white" data-style="九色鹿缘">
-                            <span class="font-semibold text-sm" style="color:#2c2c2c;">九色鹿缘</span>
-                            <span class="text-[10px] leading-tight text-center" style="color:#9b8c7c;">赭红山峦·神鹿故事</span>
-                        </button>
-                        <button class="style-card flex flex-col items-center justify-center gap-1 p-3.5 border rounded-xl text-xs font-medium transition bg-white" data-style="藻井天顶">
-                            <span class="font-semibold text-sm" style="color:#2c2c2c;">藻井天顶</span>
-                            <span class="text-[10px] leading-tight text-center" style="color:#9b8c7c;">联珠纹·莲花纹铺开</span>
-                        </button>
-                        <button class="style-card flex flex-col items-center justify-center gap-1 p-3.5 border rounded-xl text-xs font-medium transition bg-white" data-style="丝路驼影">
-                            <span class="font-semibold text-sm" style="color:#2c2c2c;">丝路驼影</span>
-                            <span class="text-[10px] leading-tight text-center" style="color:#9b8c7c;">西域商贾·沙漠落日</span>
-                        </button>
-                        <button class="style-card flex flex-col items-center justify-center gap-1 p-3.5 border rounded-xl text-xs font-medium transition bg-white" data-style="金刚怒目">
-                            <span class="font-semibold text-sm" style="color:#2c2c2c;">金刚怒目</span>
-                            <span class="text-[10px] leading-tight text-center" style="color:#9b8c7c;">护法金刚·火焰纹</span>
-                        </button>
-                        <button class="style-card flex flex-col items-center justify-center gap-1 p-3.5 border rounded-xl text-xs font-medium transition bg-white" data-style="斑驳千年">
-                            <span class="font-semibold text-sm" style="color:#2c2c2c;">斑驳千年</span>
-                            <span class="text-[10px] leading-tight text-center" style="color:#9b8c7c;">壁画剥落·岁月肌理</span>
-                        </button>
+                    <div class="upload-subtitle">
+                        JPG / PNG / WEBP · 最大 10 MB
                     </div>
+
+                    <button
+                        class="upload-button"
+                        id="uploadButton"
+                        type="button"
+                    >
+                        选择图片
+                    </button>
+
                 </div>
 
-                <!-- 生成按钮 -->
-                <button id="generate-btn" class="w-full py-4 rounded-xl font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg text-white" style="background-color:#b34d4a;box-shadow:0 8px 24px rgba(179,77,74,0.25);">
-                    一键渲染 · 穿越敦煌
-                </button>
+                <img
+                    id="previewImage"
+                    class="preview-image"
+                    alt="已上传图片预览"
+                    style="display:none;"
+                >
 
-                <div id="status" class="text-center text-sm hidden" style="color:#8b7a6a;"></div>
             </div>
 
-            <!-- 右侧结果 -->
-            <div class="result-frame border rounded-2xl p-4 bg-white">
-                <div class="aspect-square rounded-xl flex items-center justify-center overflow-hidden relative" style="background-color:#faf7f2;">
-                    <img id="result-img" src="" alt="生成结果" class="hidden max-w-full max-h-full object-contain z-10">
-                    <span id="result-placeholder" class="flex flex-col items-center gap-2 z-10" style="color:#d5c8b8;">
-                        <span class="text-sm">等待生成飞天大片</span>
-                    </span>
-                </div>
-                <button id="download-btn" class="mt-4 w-full py-3 border rounded-lg text-sm font-medium transition hidden hover:shadow-md" style="border-color:#d5c8b8;color:#7a6a5c;background:#fffefb;">
-                    下载高清飞天照片
+            <input
+                id="fileInput"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+            >
+
+            <div
+                class="preview-actions"
+                id="previewActions"
+                style="display:none;"
+            >
+                <span class="text-button">
+                    图片已加载
+                </span>
+
+                <button
+                    class="text-button"
+                    id="removeImage"
+                    type="button"
+                >
+                    移除
                 </button>
             </div>
+
         </div>
-    </section>
 
-    <!-- 作品展示 (8张真实图片) -->
-    <section id="gallery" class="max-w-6xl mx-auto px-6 py-16 relative z-10" style="border-top:1px solid #f0e8dd;">
-        <h2 class="text-3xl font-bold mb-2 text-center" style="color:#2c2c2c;">飞天作品展示</h2>
-        <p class="text-center mb-3" style="color:#9b8c7c;">以下是使用 AI 渲染的敦煌风格效果图</p>
-        <p class="text-center mb-12 text-xs italic" style="color:#c9a84c;">※ 图片为真实渲染结果</p>
-        
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <!-- 8张作品卡片，图片名称为风格名.png -->
-            <div class="gallery-card group relative rounded-2xl overflow-hidden shadow-md border bg-white" style="border-color:#e5d5c8;">
-                <img src="反弹琵琶.png" alt="反弹琵琶风格" class="w-full aspect-square object-cover group-hover:scale-105 transition duration-700">
-                <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition flex flex-col justify-end p-4">
-                    <span class="text-white text-xs font-semibold uppercase tracking-wider">反弹琵琶</span>
-                    <p class="text-white text-sm font-medium">飞天环绕，飘带飞舞</p>
-                </div>
+
+        <!-- Styles -->
+
+        <div class="panel" id="styles">
+
+            <div class="panel-label">
+                <strong>风格</strong>
+                <span>02</span>
             </div>
-            <div class="gallery-card group relative rounded-2xl overflow-hidden shadow-md border bg-white" style="border-color:#e5d5c8;">
-                <img src="供养人像.png" alt="供养人像风格" class="w-full aspect-square object-cover group-hover:scale-105 transition duration-700">
-                <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition flex flex-col justify-end p-4">
-                    <span class="text-white text-xs font-semibold uppercase tracking-wider">供养人像</span>
-                    <p class="text-white text-sm font-medium">晚唐华服，手持鲜花</p>
-                </div>
+
+            <div class="style-grid">
+
+                <button
+                    class="style-card selected"
+                    data-style="photo-abstract-editorial"
+                    type="button"
+                >
+                    <div class="style-preview preview-abstract">
+                        <img class="style-preview-img" src="极简.png" alt="">
+                    </div>
+
+                    <div class="style-content">
+                        <div class="style-name">
+                            <span class="style-name-cn">极简抽象</span>
+                            <span class="style-name-en">EDITORIAL</span>
+                        </div>
+
+                        <p class="style-description">
+                            将照片提炼为空间、色彩与视觉节奏。
+                        </p>
+                    </div>
+                </button>
+
+
+                <button
+                    class="style-card"
+                    data-style="classical-painting"
+                    type="button"
+                >
+                    <div class="style-preview preview-classical">
+                        <img class="style-preview-img" src="古画.png" alt="">
+                    </div>
+
+                    <div class="style-content">
+                        <div class="style-name">
+                            <span class="style-name-cn">中国古画</span>
+                            <span class="style-name-en">CLASSICAL</span>
+                        </div>
+
+                        <p class="style-description">
+                            将摄影画面转化为传统中国绘画语言。
+                        </p>
+                    </div>
+                </button>
+
+
+                <button
+                    class="style-card"
+                    data-style="american-comic"
+                    type="button"
+                >
+                    <div class="style-preview preview-comic">
+                        <img class="style-preview-img" src="漫画.png" alt="">
+                    </div>
+
+                    <div class="style-content">
+                        <div class="style-name">
+                            <span class="style-name-cn">美式漫画</span>
+                            <span class="style-name-en">COMIC</span>
+                        </div>
+
+                        <p class="style-description">
+                            强烈线稿、网点与漫画分镜视觉。
+                        </p>
+                    </div>
+                </button>
+
+
+                <button
+                    class="style-card"
+                    data-style="oil-painting"
+                    type="button"
+                >
+                    <div class="style-preview preview-oil">
+                        <img class="style-preview-img" src="油画.png" alt="">
+                    </div>
+
+                    <div class="style-content">
+                        <div class="style-name">
+                            <span class="style-name-cn">油画</span>
+                            <span class="style-name-en">OIL</span>
+                        </div>
+
+                        <p class="style-description">
+                            厚重笔触、颜料肌理与绘画质感。
+                        </p>
+                    </div>
+                </button>
+
+
+                <button
+                    class="style-card"
+                    data-style="watercolor"
+                    type="button"
+                >
+                    <div class="style-preview preview-watercolor">
+                        <img class="style-preview-img" src="水彩.png" alt="">
+                    </div>
+
+                    <div class="style-content">
+                        <div class="style-name">
+                            <span class="style-name-cn">水彩</span>
+                            <span class="style-name-en">WATERCOLOR</span>
+                        </div>
+
+                        <p class="style-description">
+                            柔和透明的色层与自然晕染。
+                        </p>
+                    </div>
+                </button>
+
+
+                <button
+                    class="style-card"
+                    data-style="analog-film"
+                    type="button"
+                >
+                    <div class="style-preview preview-film">
+                        <img class="style-preview-img" src="胶片.png" alt="">
+                    </div>
+
+                    <div class="style-content">
+                        <div class="style-name">
+                            <span class="style-name-cn">胶片摄影</span>
+                            <span class="style-name-en">ANALOG FILM</span>
+                        </div>
+
+                        <p class="style-description">
+                            复古色彩、颗粒与真实胶片氛围。
+                        </p>
+                    </div>
+                </button>
+
             </div>
-            <div class="gallery-card group relative rounded-2xl overflow-hidden shadow-md border bg-white" style="border-color:#e5d5c8;">
-                <img src="千佛光相.png" alt="千佛光相风格" class="w-full aspect-square object-cover group-hover:scale-105 transition duration-700">
-                <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition flex flex-col justify-end p-4">
-                    <span class="text-white text-xs font-semibold uppercase tracking-wider">千佛光相</span>
-                    <p class="text-white text-sm font-medium">千佛放射，庄严光相</p>
-                </div>
+
+
+            <div class="generate-area">
+
+                <button
+                    class="generate-button"
+                    id="generateButton"
+                    disabled
+                    type="button"
+                >
+                    生成图片
+                </button>
+
+                <div
+                    class="status"
+                    id="status"
+                ></div>
+
             </div>
-            <div class="gallery-card group relative rounded-2xl overflow-hidden shadow-md border bg-white" style="border-color:#e5d5c8;">
-                <img src="九色鹿缘.png" alt="九色鹿缘风格" class="w-full aspect-square object-cover group-hover:scale-105 transition duration-700">
-                <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition flex flex-col justify-end p-4">
-                    <span class="text-white text-xs font-semibold uppercase tracking-wider">九色鹿缘</span>
-                    <p class="text-white text-sm font-medium">神鹿故事，赭红山峦</p>
-                </div>
-            </div>
-            <div class="gallery-card group relative rounded-2xl overflow-hidden shadow-md border bg-white" style="border-color:#e5d5c8;">
-                <img src="藻井天顶.png" alt="藻井天顶风格" class="w-full aspect-square object-cover group-hover:scale-105 transition duration-700">
-                <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition flex flex-col justify-end p-4">
-                    <span class="text-white text-xs font-semibold uppercase tracking-wider">藻井天顶</span>
-                    <p class="text-white text-sm font-medium">莲花纹，联珠纹铺开</p>
-                </div>
-            </div>
-            <div class="gallery-card group relative rounded-2xl overflow-hidden shadow-md border bg-white" style="border-color:#e5d5c8;">
-                <img src="丝路驼影.png" alt="丝路驼影风格" class="w-full aspect-square object-cover group-hover:scale-105 transition duration-700">
-                <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition flex flex-col justify-end p-4">
-                    <span class="text-white text-xs font-semibold uppercase tracking-wider">丝路驼影</span>
-                    <p class="text-white text-sm font-medium">胡帽牵驼，沙漠落日</p>
-                </div>
-            </div>
-            <div class="gallery-card group relative rounded-2xl overflow-hidden shadow-md border bg-white" style="border-color:#e5d5c8;">
-                <img src="金刚怒目.png" alt="金刚怒目风格" class="w-full aspect-square object-cover group-hover:scale-105 transition duration-700">
-                <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition flex flex-col justify-end p-4">
-                    <span class="text-white text-xs font-semibold uppercase tracking-wider">金刚怒目</span>
-                    <p class="text-white text-sm font-medium">护法金刚，火焰纹绕</p>
-                </div>
-            </div>
-            <div class="gallery-card group relative rounded-2xl overflow-hidden shadow-md border bg-white" style="border-color:#e5d5c8;">
-                <img src="斑驳千年.png" alt="斑驳千年风格" class="w-full aspect-square object-cover group-hover:scale-105 transition duration-700">
-                <div class="gallery-overlay absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition flex flex-col justify-end p-4">
-                    <span class="text-white text-xs font-semibold uppercase tracking-wider">斑驳千年</span>
-                    <p class="text-white text-sm font-medium">壁画剥落，岁月肌理</p>
-                </div>
-            </div>
+
         </div>
-    </section>
 
-    <!-- 页脚 -->
-    <footer class="py-12 text-center text-sm relative z-10" style="border-top:1px solid #f0e8dd;color:#b0a090;">
-        <div class="max-w-4xl mx-auto px-6">
-            <p class="mb-2" style="color:#8b7a6a;">&copy; 2026 敦煌幻境 · AI 飞天照相馆</p>
-            <p class="text-xs" style="color:#c0b0a0;">Powered by Qwen Image Edit</p>
+    </div>
+
+</section>
+
+
+<!-- =========================
+     Result
+========================= -->
+
+<section
+    class="section result-section"
+    id="resultSection"
+>
+
+    <div class="section-header">
+
+        <div>
+            <div class="section-number">03 / 生成结果</div>
+            <h2 class="section-title">你的风格化图片</h2>
         </div>
-    </footer>
 
-    <script>
-        // UI 元素
-        const uploadInput = document.getElementById('upload-input');
-        const previewImg = document.getElementById('preview-img');
-        const uploadPlaceholder = document.getElementById('upload-placeholder');
-        const uploadPreview = document.getElementById('upload-preview');
-        const styleCards = document.querySelectorAll('.style-card');
-        const generateBtn = document.getElementById('generate-btn');
-        const resultImg = document.getElementById('result-img');
-        const resultPlaceholder = document.getElementById('result-placeholder');
-        const downloadBtn = document.getElementById('download-btn');
-        const statusDiv = document.getElementById('status');
+        <p class="section-description">
+            原照片已重新诠释。
+        </p>
 
-        let selectedStyle = null;
-        let originalImageData = null;
+    </div>
 
-        // 风格选择交互
-        styleCards.forEach(card => {
-            card.addEventListener('click', () => {
-                styleCards.forEach(c => c.classList.remove('active'));
-                card.classList.add('active');
-                selectedStyle = card.dataset.style;
-            });
-        });
 
-        // 默认选中第一个风格
-        if (styleCards.length > 0) {
-            styleCards[0].classList.add('active');
-            selectedStyle = styleCards[0].dataset.style;
+    <div class="result-container">
+
+        <div class="result-image-wrap">
+
+            <img
+                id="resultImage"
+                class="result-image"
+                alt="生成结果"
+            >
+
+        </div>
+
+        <div class="result-footer">
+
+            <div
+                class="result-info"
+                id="resultInfo"
+            >
+                风格: <strong>—</strong>
+            </div>
+
+            <button
+                class="download-button"
+                id="downloadButton"
+                type="button"
+            >
+                下载图片
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     History
+========================= -->
+
+<section class="section" id="history">
+
+    <div class="section-header">
+        <div>
+            <div class="section-number">04 / 历史记录</div>
+            <h2 class="section-title">创作历史</h2>
+        </div>
+        <p class="section-description">最近生成的作品会保存在本地浏览器中。</p>
+    </div>
+
+    <div class="history-toolbar">
+        <button class="text-button" id="clearHistoryButton" type="button">清空历史</button>
+    </div>
+
+    <div class="history-grid" id="historyGrid"></div>
+
+</section>
+
+
+<!-- =========================
+     Statement
+========================= -->
+
+<section
+    class="statement"
+    id="about"
+>
+
+    <div class="statement-inner">
+
+        <div class="statement-text">
+            记录当下，
+            <span>探索世界的无限可能。</span>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     Footer
+========================= -->
+
+<footer>
+
+    <div class="footer-inner">
+
+        <span>© 2026 PixShift</span>
+
+        <span>智谱智绘AI工作室</span>
+
+    </div>
+
+</footer>
+
+
+<!-- =========================
+     Loading
+========================= -->
+
+<div
+    class="loading"
+    id="loading"
+>
+
+    <div class="loading-box">
+
+        <div class="loading-dot"></div>
+
+        <div class="loading-text">
+            PixShift 正在转换你的图片…
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /* =========================
+       DOM
+    ========================= */
+
+    const fileInput = document.getElementById("fileInput");
+    const uploadButton = document.getElementById("uploadButton");
+    const uploadArea = document.getElementById("uploadArea");
+    const uploadEmpty = document.getElementById("uploadEmpty");
+    const previewImage = document.getElementById("previewImage");
+    const previewActions = document.getElementById("previewActions");
+    const removeImage = document.getElementById("removeImage");
+
+    const generateButton = document.getElementById("generateButton");
+    const status = document.getElementById("status");
+
+    const loading = document.getElementById("loading");
+
+    const resultSection = document.getElementById("resultSection");
+    const resultImage = document.getElementById("resultImage");
+    const resultInfo = document.getElementById("resultInfo");
+    const downloadButton = document.getElementById("downloadButton");
+
+    // 历史记录相关元素
+    const historyGrid = document.getElementById("historyGrid");
+    const clearHistoryButton = document.getElementById("clearHistoryButton");
+
+    let selectedStyle = "photo-abstract-editorial";
+    let originalImageData = null;
+    let resultImageUrl = null;
+
+    /* =========================
+       历史记录管理
+    ========================= */
+
+    const HISTORY_STORAGE_KEY = "pixshift_history";
+    const MAX_HISTORY_ITEMS = 12;
+
+    function getHistory() {
+        try {
+            const data = localStorage.getItem(HISTORY_STORAGE_KEY);
+            return data ? JSON.parse(data) : [];
+        } catch (error) {
+            console.error("读取历史记录失败:", error);
+            return [];
+        }
+    }
+
+    function saveHistory(history) {
+        try {
+            localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
+        } catch (error) {
+            console.error("保存历史记录失败:", error);
+        }
+    }
+
+    function addHistoryItem(item) {
+        const history = getHistory();
+        history.unshift(item);
+        // 限制最大条数
+        if (history.length > MAX_HISTORY_ITEMS) {
+            history.length = MAX_HISTORY_ITEMS;
+        }
+        saveHistory(history);
+        renderHistory();
+    }
+
+    function renderHistory() {
+        if (!historyGrid) return;
+
+        const history = getHistory();
+        historyGrid.innerHTML = "";
+
+        if (history.length === 0) {
+            historyGrid.innerHTML = '<p style="color: var(--text-secondary); font-size: 14px; text-align: center; padding: 20px;">暂无历史记录</p>';
+            return;
         }
 
-        // 图片压缩函数
-        async function compressImage(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const img = new Image();
-                    img.onload = () => {
-                        const maxDimension = 1024;
-                        let width = img.width;
-                        let height = img.height;
-                        if (width > height && width > maxDimension) {
-                            height = (height * maxDimension) / width;
+        history.forEach(item => {
+            const card = document.createElement("div");
+            card.className = "history-item";
+
+            const img = document.createElement("img");
+            img.src = item.imageUrl;
+            img.alt = item.styleName || "生成作品";
+            img.loading = "lazy";
+
+            const info = document.createElement("div");
+            info.className = "history-item-info";
+
+            const styleSpan = document.createElement("span");
+            styleSpan.className = "history-item-style";
+            styleSpan.textContent = item.styleName || "未知风格";
+
+            const dateSpan = document.createElement("span");
+            dateSpan.className = "history-item-date";
+            dateSpan.textContent = new Date(item.timestamp).toLocaleString();
+
+            info.appendChild(styleSpan);
+            info.appendChild(dateSpan);
+
+            card.appendChild(img);
+            card.appendChild(info);
+
+            card.addEventListener("click", () => {
+                // 点击历史项，加载到结果区域
+                resultImageUrl = item.imageUrl;
+                resultImage.src = item.imageUrl;
+                resultInfo.innerHTML = `风格: <strong>${escapeHtml(item.styleName || "未知风格")}</strong>`;
+                resultSection.classList.add("show");
+                resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
+            });
+
+            historyGrid.appendChild(card);
+        });
+    }
+
+    function clearHistory() {
+        localStorage.removeItem(HISTORY_STORAGE_KEY);
+        renderHistory();
+    }
+
+    // 初始化历史记录
+    renderHistory();
+
+    // 清空历史按钮事件
+    clearHistoryButton.addEventListener("click", clearHistory);
+
+
+    /* =========================
+       Style selection
+    ========================= */
+
+    document.querySelectorAll(".style-card").forEach(card => {
+
+        card.addEventListener("click", () => {
+
+            document.querySelectorAll(".style-card")
+                .forEach(item => item.classList.remove("selected"));
+
+            card.classList.add("selected");
+
+            selectedStyle = card.dataset.style;
+
+            updateGenerateButton();
+
+        });
+
+    });
+
+
+    /* =========================
+       File selection
+    ========================= */
+
+    uploadButton.addEventListener("click", () => {
+        fileInput.click();
+    });
+
+
+    fileInput.addEventListener("change", event => {
+
+        const file = event.target.files[0];
+
+        if (!file) {
+            return;
+        }
+
+        handleFile(file);
+
+    });
+
+
+    /* =========================
+       Drag & Drop
+    ========================= */
+
+    uploadArea.addEventListener("dragover", event => {
+
+        event.preventDefault();
+
+        uploadArea.classList.add("dragover");
+
+    });
+
+
+    uploadArea.addEventListener("dragleave", () => {
+
+        uploadArea.classList.remove("dragover");
+
+    });
+
+
+    uploadArea.addEventListener("drop", event => {
+
+        event.preventDefault();
+
+        uploadArea.classList.remove("dragover");
+
+        const file = event.dataTransfer.files[0];
+
+        if (!file) {
+            return;
+        }
+
+        handleFile(file);
+
+    });
+
+
+    /* =========================
+       Handle image
+    ========================= */
+
+    async function handleFile(file) {
+
+        if (!file.type.startsWith("image/")) {
+
+            showStatus("请选择图片文件。");
+
+            return;
+
+        }
+
+        if (file.size > 10 * 1024 * 1024) {
+
+            showStatus("图片必须小于 10 MB。");
+
+            return;
+
+        }
+
+        try {
+
+            originalImageData = await compressImage(file);
+
+            previewImage.src = originalImageData;
+
+            previewImage.style.display = "block";
+
+            uploadEmpty.style.display = "none";
+
+            previewActions.style.display = "flex";
+
+            updateGenerateButton();
+
+            showStatus("");
+
+        } catch (error) {
+
+            console.error(error);
+
+            showStatus("无法读取此图片。");
+
+        }
+
+    }
+
+
+    /* =========================
+       Image compression
+    ========================= */
+
+    function compressImage(file) {
+
+        return new Promise((resolve, reject) => {
+
+            const reader = new FileReader();
+
+            reader.onload = event => {
+
+                const img = new Image();
+
+                img.onload = () => {
+
+                    const maxDimension = 1536;
+
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > maxDimension || height > maxDimension) {
+
+                        if (width > height) {
+
+                            height = Math.round(
+                                height * maxDimension / width
+                            );
+
                             width = maxDimension;
-                        } else if (height > maxDimension) {
-                            width = (width * maxDimension) / height;
+
+                        } else {
+
+                            width = Math.round(
+                                width * maxDimension / height
+                            );
+
                             height = maxDimension;
+
                         }
-                        const canvas = document.createElement('canvas');
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-                        const base64 = canvas.toDataURL('image/jpeg', 0.7);
-                        resolve(base64);
-                    };
-                    img.onerror = () => reject(new Error('图片加载失败'));
-                    img.src = e.target.result;
+
+                    }
+
+                    const canvas = document.createElement("canvas");
+
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    const ctx = canvas.getContext("2d");
+
+                    ctx.drawImage(
+                        img,
+                        0,
+                        0,
+                        width,
+                        height
+                    );
+
+                    resolve(
+                        canvas.toDataURL(
+                            "image/jpeg",
+                            0.82
+                        )
+                    );
+
                 };
-                reader.onerror = () => reject(new Error('文件读取失败'));
-                reader.readAsDataURL(file);
-            });
+
+                img.onerror = reject;
+
+                img.src = event.target.result;
+
+            };
+
+            reader.onerror = reject;
+
+            reader.readAsDataURL(file);
+
+        });
+
+    }
+
+
+    /* =========================
+       Remove image
+    ========================= */
+
+    removeImage.addEventListener("click", () => {
+
+        originalImageData = null;
+
+        fileInput.value = "";
+
+        previewImage.src = "";
+
+        previewImage.style.display = "none";
+
+        uploadEmpty.style.display = "flex";
+
+        previewActions.style.display = "none";
+
+        updateGenerateButton();
+
+        resultSection.classList.remove("show");
+
+    });
+
+
+    /* =========================
+       Button state
+    ========================= */
+
+    function updateGenerateButton() {
+
+        generateButton.disabled = !originalImageData;
+
+    }
+
+
+    /* =========================
+       Generate
+    ========================= */
+
+    generateButton.addEventListener("click", async () => {
+
+        if (!originalImageData) {
+
+            showStatus("请先上传图片。");
+
+            return;
+
         }
 
-        // 上传处理
-        async function handleFileSelect() {
-            const file = uploadInput.files[0];
-            if (!file) return;
-            if (!file.type.startsWith('image/')) {
-                alert('请选择图片文件');
-                return;
-            }
-            if (file.size > 10 * 1024 * 1024) {
-                alert('图片大小不能超过10MB');
-                return;
-            }
-            try {
-                const compressedBase64 = await compressImage(file);
-                previewImg.src = compressedBase64;
-                uploadPlaceholder.classList.add('hidden');
-                uploadPreview.classList.remove('hidden');
-                originalImageData = compressedBase64;
-            } catch (err) {
-                alert('图片处理失败，请重试');
-                console.error(err);
-            }
-        }
+        loading.classList.add("show");
 
-        uploadInput.addEventListener('change', handleFileSelect);
+        generateButton.disabled = true;
 
-        // 拖拽上传
-        const dropzone = document.getElementById('dropzone');
-        dropzone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropzone.style.borderColor = '#c9a84c';
-            dropzone.style.backgroundColor = '#fdf9ed';
-        });
-        dropzone.addEventListener('dragleave', (e) => {
-            e.preventDefault();
-            dropzone.style.borderColor = '#e5d5c8';
-            dropzone.style.backgroundColor = '#fffefb';
-        });
-        dropzone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropzone.style.borderColor = '#e5d5c8';
-            dropzone.style.backgroundColor = '#fffefb';
-            if (e.dataTransfer.files.length) {
-                uploadInput.files = e.dataTransfer.files;
-                handleFileSelect();
-            }
-        });
+        showStatus("");
 
-        // 渲染生成
-        generateBtn.addEventListener('click', async () => {
-            if (!originalImageData) {
-                alert('请先上传人像照片');
-                return;
-            }
-            if (!selectedStyle) {
-                alert('请选择敦煌风格');
-                return;
-            }
+        try {
 
-            generateBtn.disabled = true;
-            generateBtn.innerHTML = '正在渲染飞天大片...';
-            statusDiv.classList.remove('hidden');
-            statusDiv.textContent = 'AI 正在处理，请稍候...';
-            resultImg.classList.add('hidden');
-            resultPlaceholder.classList.remove('hidden');
-            downloadBtn.classList.add('hidden');
+            const response = await fetch(
+                "/api/dunhuang-render",
+                {
+                    method: "POST",
 
-            try {
-                const response = await fetch('/api/dunhuang-render', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
                     body: JSON.stringify({
-                        style_name: selectedStyle,
+                        style_id: selectedStyle,
                         image_base64: originalImageData
                     })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok || !data.success) {
+
+                throw new Error(
+                    data.error || "图像生成失败。"
+                );
+
+            }
+
+            resultImageUrl = data.imageUrl;
+
+            resultImage.src = resultImageUrl;
+
+            const styleName = data.style_name || selectedStyle;
+
+            resultInfo.innerHTML =
+                `风格: <strong>${escapeHtml(styleName)}</strong>`;
+
+            resultSection.classList.add("show");
+
+            // 添加到历史记录
+            addHistoryItem({
+                imageUrl: resultImageUrl,
+                styleName: styleName,
+                timestamp: new Date().toISOString()
+            });
+
+            setTimeout(() => {
+
+                resultSection.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
                 });
 
-                let data;
-                const contentType = response.headers.get('content-type');
-                if (contentType && contentType.includes('application/json')) {
-                    data = await response.json();
-                } else {
-                    const text = await response.text();
-                    throw new Error(`服务器返回异常 (${response.status})`);
-                }
+            }, 100);
 
-                if (!data.success) {
-                    throw new Error(data.error || '生成失败');
-                }
+        } catch (error) {
 
-                resultImg.src = data.imageUrl;
-                resultImg.onload = () => {
-                    resultPlaceholder.classList.add('hidden');
-                    resultImg.classList.remove('hidden');
-                    downloadBtn.classList.remove('hidden');
-                    downloadBtn.onclick = () => {
-                        const a = document.createElement('a');
-                        a.href = data.imageUrl;
-                        a.download = `dunhuang-${selectedStyle}.jpg`;
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                    };
-                };
-                statusDiv.textContent = '渲染完成！';
-                statusDiv.style.color = '#4a7c59';
+            console.error(error);
 
-            } catch (err) {
-                statusDiv.textContent = `失败：${err.message}`;
-                statusDiv.style.color = '#b34d4a';
-                alert('生成失败: ' + err.message);
-            } finally {
-                generateBtn.disabled = false;
-                generateBtn.innerHTML = '一键渲染 · 穿越敦煌';
-                setTimeout(() => {
-                    statusDiv.classList.add('hidden');
-                    statusDiv.style.color = '#8b7a6a';
-                }, 6000);
-            }
-        });
-    </script>
+            showStatus(
+                error.message ||
+                "出错了，请重试。"
+            );
+
+        } finally {
+
+            loading.classList.remove("show");
+
+            updateGenerateButton();
+
+        }
+
+    });
+
+
+    /* =========================
+       Download
+    ========================= */
+
+    downloadButton.addEventListener("click", async () => {
+
+        if (!resultImageUrl) {
+            return;
+        }
+
+        try {
+
+            const response = await fetch(resultImageUrl);
+
+            const blob = await response.blob();
+
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+
+            link.href = url;
+
+            link.download =
+                `pixshift-${selectedStyle}.jpg`;
+
+            document.body.appendChild(link);
+
+            link.click();
+
+            link.remove();
+
+            URL.revokeObjectURL(url);
+
+        } catch (error) {
+
+            console.error(error);
+
+            window.open(
+                resultImageUrl,
+                "_blank"
+            );
+
+        }
+
+    });
+
+
+    /* =========================
+       Helpers
+    ========================= */
+
+    function showStatus(message) {
+
+        status.textContent = message;
+
+    }
+
+
+    function escapeHtml(value) {
+
+        return String(value)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+
+    }
+
+</script>
+
 </body>
 </html>
